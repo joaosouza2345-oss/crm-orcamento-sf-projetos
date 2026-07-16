@@ -7,7 +7,7 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
 :root{--bg:#f0f2f5;--bg2:#fff;--bg3:#f8f9fa;--text:#1a1a2e;--text2:#555;--side:#1a2332;--side-txt:#c8d0dc;--side-hover:#2a3a52;--borda:#e0e0e0;--primaria:#2563eb;--sucesso:#16a34a;--perigo:#dc2626;--aviso:#f59e0b;--input-bg:#fff;--input-border:#d1d5db;--header-bg:#1a2332;--header-txt:#fff}
 .dark{--bg:#0f1724;--bg2:#1a2332;--bg3:#1e293b;--text:#e2e8f0;--text2:#94a3b8;--side:#0d1321;--side-txt:#94a3b8;--side-hover:#1e293b;--borda:#2d3a4e;--primaria:#3b82f6;--sucesso:#22c55e;--perigo:#ef4444;--aviso:#fbbf24;--input-bg:#1e293b;--input-border:#334155;--header-bg:#0d1321;--header-txt:#e2e8f0}
 body{background:var(--bg);color:var(--text);min-height:100vh}
@@ -40,14 +40,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh}
 .conteudo{flex:1;margin-left:200px;padding:20px;min-height:calc(100vh - 52px)}
 .titulo-pag{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--text)}
 .cartoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
-.cartao{background:var(--bg2);border-radius:10px;padding:16px;border:1px solid var(--borda)}
+.cartao{background:var(--bg2);border-radius:10px;padding:16px;border:1px solid var(--borda);box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .cartao .rotulo{font-size:11px;color:var(--text2);text-transform:uppercase;font-weight:600}
 .cartao .valor{font-size:24px;font-weight:700;color:var(--text);margin-top:4px}
 .cartao .sub{font-size:12px;color:var(--text2);margin-top:2px}
 .grafico-card{background:var(--bg2);border-radius:10px;padding:16px;border:1px solid var(--borda);margin-bottom:16px}
 .grafico-card h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px}
-canvas{max-height:280px}
-.linha-graficos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+canvas{max-height:280px}.linha-graficos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.barra-abas{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.barra-abas button{padding:6px 14px;border:1px solid var(--borda);border-radius:6px;background:var(--bg3);color:var(--text2);cursor:pointer;font-size:12px;font-weight:500}
+.barra-abas button.ativo{background:var(--primaria);color:#fff;border-color:var(--primaria)}
+.sub-barra{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.sub-barra button{padding:4px 12px;border:1px solid var(--borda);border-radius:5px;background:transparent;color:var(--text2);cursor:pointer;font-size:11px}
+.sub-barra button.ativo{background:var(--primaria);color:#fff;border-color:var(--primaria)}
 .tabela-wrap{overflow-x:auto;background:var(--bg2);border-radius:10px;border:1px solid var(--borda);margin-bottom:16px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead{background:var(--bg3)}
@@ -57,9 +62,10 @@ tr:hover td{background:var(--bg3)}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
 .badge-green{background:#dcfce7;color:#166534}.dark .badge-green{background:#064e3b;color:#6ee7b7}
 .badge-red{background:#fce4ec;color:#b71c1c}.dark .badge-red{background:#4c1d1d;color:#fca5a5}
+.badge-yellow{background:#fef3c7;color:#92400e}.dark .badge-yellow{background:#4d3d00;color:#fde68a}
 .edita-input,.edita-select{padding:4px 6px;border:1px solid var(--input-border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}
-.btn-primary{background:var(--primaria);color:#fff}
+.btn-primary{background:var(--primaria);color:#fff}.btn-primary:hover{background:#1d4ed8}
 .btn-success{background:var(--sucesso);color:#fff}
 .btn-outline{background:transparent;border:1px solid var(--borda);color:var(--text)}
 .btn-icone{background:none;border:none;cursor:pointer;font-size:15px;padding:3px 5px;color:var(--text2)}
@@ -68,6 +74,8 @@ tr:hover td{background:var(--bg3)}
 .grupo{display:flex;flex-direction:column;gap:3px}
 .grupo label{font-size:12px;color:var(--text2);font-weight:500}
 .grupo input,.grupo select{padding:8px 10px;border:1px solid var(--input-border);border-radius:5px;background:var(--input-bg);color:var(--text);font-size:14px;outline:none}
+.orc-tema{--bg:#0f1724;--bg2:#1a2332;--bg3:#1e293b;--text:#e2e8f0;--text2:#94a3b8;--border:#2d3a4e;--input-bg:#1a2332;--input-border:#334155}
+.orc-tema .cartao{background:#1a2332;border-color:#334155}
 .orc-tema input,.orc-tema select{background:#1a2332;border-color:#334155;color:#e2e8f0}
 .orc-nav{display:flex;gap:4px;margin-bottom:14px;background:var(--bg3);padding:4px;border-radius:8px}
 .orc-nav span{padding:7px 14px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text2);font-weight:500}
@@ -80,52 +88,68 @@ tr:hover td{background:var(--bg3)}
 .estq-item .qtd.ok{color:var(--sucesso)}.estq-item .qtd.baixo{color:var(--aviso)}.estq-item .qtd.critico{color:var(--perigo)}
 .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal{background:var(--bg2);border-radius:14px;padding:24px;width:460px;max-width:95%}
+.modal{background:var(--bg2);border-radius:14px;padding:24px;width:460px;max-width:95%;max-height:90vh;overflow-y:auto}
 .modal h2{font-size:17px;font-weight:700;color:var(--text);margin-bottom:14px}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:14px}
 .flut-direita{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2)}
-@media(max-width:768px){
-.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
-.conteudo{margin-left:0;padding:14px}
-.cartoes{grid-template-columns:1fr 1fr}
-.linha-graficos{grid-template-columns:1fr}
-.form-grid,.form-grid-3{grid-template-columns:1fr}
-}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.conteudo{margin-left:0;padding:14px}.cartoes{grid-template-columns:1fr 1fr}.linha-graficos{grid-template-columns:1fr}.form-grid,.form-grid-3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="telaLogin">
 <div class="login-box">
 <div style="background:#2563eb;color:#fff;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;margin-bottom:10px">SF</div>
-<h1>CRM SF Projetos Elétricos</h1>
+<h1>CRM SF</h1>
 <p class="sub">Instalações Fotovoltaicas</p>
 <label>Usuário</label><input type="text" id="loginUser" value="admin">
 <label>Senha</label><input type="password" id="loginPass" value="admin123" onkeydown="if(event.key=='Enter')logar()">
-<div class="remember"><input type="checkbox" id="rememberMe" checked><label for="rememberMe">Lembrar login</label></div>
+<div class="remember"><input type="checkbox" id="rememberMe"><label for="rememberMe">Lembrar login</label></div>
 <button onclick="logar()">Entrar</button>
 <div class="login-erro" id="loginErro">Usuário ou senha inválidos</div>
 </div></div>
-<div id="app"><div class="topo"><div class="topo-esq"><div class="logo">SF</div><h2>CRM SF Projetos Elétricos</h2></div><div class="topo-dir"><button class="topo-btn" onclick="alternarTema()" id="btnTema">🌙</button><button class="topo-btn" onclick="sair()">Sair</button></div></div><div class="layout"><div class="sidebar" id="sidebar"><div class="sidebar-item ativo" onclick="ir('dashboard')"><span>📊</span>Dashboard</div><div class="sidebar-item" onclick="ir('leads')"><span>👥</span>Leads</div><div class="sidebar-item" onclick="ir('vendas')"><span>💰</span>Vendas</div><div class="sidebar-item" onclick="ir('gastos')"><span>🧾</span>Gastos</div><div class="sidebar-item" onclick="ir('projetos')"><span>🔬</span>Projetos</div><div class="sidebar-item" onclick="ir('orcamentos')"><span>📋</span>Orçamentos</div><div class="sidebar-item" onclick="ir('estoque')"><span>📦</span>Estoque</div><div class="sidebar-item" onclick="ir('config')"><span>⚙️</span>Config</div></div><div class="conteudo" id="conteudo"></div></div></div>
-<div class="modal-overlay" id="modalGasto"><div class="modal"><button class="flut-direita" onclick="fecharModalGasto()">✕</button><h2>Nova Venda</h2><p id="infoGasto"></p><div class="form-grid"><div class="grupo"><label>Valor</label><input type="text" id="gastoValor"></div><div class="grupo"><label>Gasto</label><input type="text" id="gastoGasto"></div><div class="grupo"><label>Empresa</label><select id="gastoEmpresa"><option>SF</option><option>SPAZZIO</option><option>BRANCO</option><option>ÉTHOS</option><option>SOLAR FORCE</option><option>TAQUARI</option></select></div><div class="grupo"><label>Potência</label><input type="text" id="gastoPotencia"></div></div><button class="btn btn-success" onclick="confirmarVenda()">Confirmar</button></div></div>
-<div class="modal-overlay" id="modalEstoque"><div class="modal"><button class="flut-direita" onclick="fecharModalEstoque()">✕</button><h2 id="tituloEstoque">Novo Item</h2><div class="form-grid"><div class="grupo"><label>Item</label><input id="estqItem"></div><div class="grupo"><label>Tipo</label><input id="estqTipo"></div><div class="grupo"><label>Marca</label><input id="estqMarca"></div><div class="grupo"><label>Un</label><select id="estqUn"><option>un</option><option>metro</option><option>kg</option><option>par</option></select></div><div class="grupo"><label>Qtd</label><input type="number" id="estqQtd"></div><div class="grupo"><label>Fornecedor</label><input id="estqFornec"></div><div class="grupo"><label>Vlr Pago</label><input type="number" id="estqPago"></div><div class="grupo"><label>Vlr Venda</label><input type="number" id="estqVenda"></div></div><button class="btn btn-primary" onclick="salvarEstoque()">Salvar</button></div></div>
+<div id="app">
+<div class="topo"><div class="topo-esq"><div class="logo">SF</div><h2>CRM SF Projetos Elétricos</h2></div><div class="topo-dir"><button class="topo-btn" onclick="alternarTema()" id="btnTema">🌙</button><button class="topo-btn" onclick="sair()">Sair</button></div></div>
+<div class="layout">
+<div class="sidebar" id="sidebar">
+<div class="sidebar-item ativo" onclick="ir('dashboard')"><span>📊</span>Dashboard</div>
+<div class="sidebar-item" onclick="ir('leads')"><span>👥</span>Leads</div>
+<div class="sidebar-item" onclick="ir('vendas')"><span>💰</span>Vendas</div>
+<div class="sidebar-item" onclick="ir('gastos')"><span>🧾</span>Gastos</div>
+<div class="sidebar-item" onclick="ir('projetos')"><span>🔬</span>Projetos</div>
+<div class="sidebar-item" onclick="ir('orcamentos')"><span>📋</span>Orçamentos</div>
+<div class="sidebar-item" onclick="ir('estoque')"><span>📦</span>Estoque</div>
+<div class="sidebar-item" onclick="ir('config')"><span>⚙️</span>Config</div></div>
+<div class="conteudo" id="conteudo"></div></div></div>
+<div class="modal-overlay" id="modalGasto"><div class="modal">
+<button class="flut-direita" onclick="fecharModalGasto()">✕</button><h2>Nova Venda</h2><p id="infoGasto"></p>
+<div class="form-grid">
+<div class="grupo"><label>Valor</label><input type="text" id="gastoValor"></div>
+<div class="grupo"><label>Gasto</label><input type="text" id="gastoGasto"></div>
+<div class="grupo"><label>Empresa</label><select id="gastoEmpresa"><option>SF</option><option>SPAZZIO</option><option>BRANCO</option><option>ÉTHOS</option><option>SOLAR FORCE</option><option>TAQUARI</option></select></div>
+<div class="grupo"><label>Potência</label><input type="text" id="gastoPotencia"></div></div>
+<button class="btn btn-success" onclick="confirmarVenda()">Confirmar</button></div></div>
+<div class="modal-overlay" id="modalEstoque"><div class="modal">
+<button class="flut-direita" onclick="fecharModalEstoque()">✕</button><h2 id="tituloEstoque">Novo Item</h2>
+<div class="form-grid">
+<div class="grupo"><label>Item</label><input id="estqItem"></div><div class="grupo"><label>Tipo</label><input id="estqTipo"></div>
+<div class="grupo"><label>Marca</label><input id="estqMarca"></div><div class="grupo"><label>Un</label><select id="estqUn"><option>un</option><option>metro</option><option>kg</option><option>par</option></select></div>
+<div class="grupo"><label>Qtd</label><input type="number" id="estqQtd"></div><div class="grupo"><label>Fornecedor</label><input id="estqFornec"></div>
+<div class="grupo"><label>Vlr Pago</label><input type="number" id="estqPago"></div><div class="grupo"><label>Vlr Venda</label><input type="number" id="estqVenda"></div></div>
+<button class="btn btn-primary" onclick="salvarEstoque()">Salvar</button></div></div>
 
 <script>
-var sb;
-function initSupabase(){
-  try{
-    sb=supabase.createClient('https://zzcenbzqlzibrqnjooia.supabase.co','sb_publishable_mH9pJzsKhc2g0qwp2AW8PQ_8hrT-cW1');
-    return true;
-  }catch(e){console.error(e);return false}
-}
-initSupabase();
+const sb = supabase.createClient('https://zzcenbzqlzibrqnjooia.supabase.co','sb_publishable_mH9pJzsKhc2g0qwp2AW8PQ_8hrT-cW1');
+var ORC_ITENS=[],ultimoGrafico=null,abaToggle='estoque',subLead='status',subProj='empresa';
+var idxVender=null,idxEditProj=null,idEditEstq=null,cacheEmpresas=[];
 
-var ORC_ITENS=[],ultimoGrafico=null,idxVender=null,idxEditProj=null,idEditEstq=null;
 function fmtNum(v){return(Number(v)||0).toFixed(2).replace('.',',')}
 function parseMon(s){if(!s)return 0;return parseFloat(String(s).replace(/[R$\s.]/g,'').replace(',','.'))||0}
 function hoje(){var d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+function anoAtual(){return new Date().getFullYear()}
 function mesesNome(){return['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']}
 function alternarTema(){document.body.classList.toggle('dark');var t=document.getElementById('btnTema');t.textContent=document.body.classList.contains('dark')?'☀️':'🌙';localStorage.setItem('tema',document.body.classList.contains('dark')?'dark':'light')}
 async function sbGet(t){try{const{data}=await sb.from(t).select('*').order('id',{ascending:false});return data||[]}catch(e){return[]}}
-async function sbInsert(t,d){try{const{data}=await sb.from(t).insert(d).select();return data}catch(e){return null}}
+async function sbInsert(t,d){try{const{data}=await sb.from(t).insert(d).select();return data||null}catch(e){return null}}
 async function sbUpdate(t,i,d){try{await sb.from(t).update(d).eq('id',i);return true}catch(e){return false}}
 async function sbDelete(t,i){try{await sb.from(t).delete().eq('id',i);return true}catch(e){return false}}
 
@@ -138,73 +162,254 @@ async function logar(){
       document.getElementById('telaLogin').style.display='none';
       document.getElementById('app').style.display='block';
       document.getElementById('loginErro').style.display='none';
-      if(document.getElementById('rememberMe').checked)localStorage.setItem('lembrar',JSON.stringify({user:u,pass:p}));else localStorage.removeItem('lembrar');
+      if(document.getElementById('rememberMe').checked)localStorage.setItem('lembrar',{user:u,pass:p});else localStorage.removeItem('lembrar');
       if(localStorage.getItem('tema')=='dark'){document.body.classList.add('dark');document.getElementById('btnTema').textContent='☀️'}
       renderDashboard();
     }else{document.getElementById('loginErro').style.display='block'}
   }catch(e){document.getElementById('loginErro').textContent='Erro: '+e.message;document.getElementById('loginErro').style.display='block'}
 }
 function sair(){document.getElementById('app').style.display='none';document.getElementById('telaLogin').style.display='flex';document.getElementById('loginPass').value=''}
-function autoLogin(){try{var r=localStorage.getItem('lembrar');if(r){var d=JSON.parse(r);document.getElementById('loginUser').value=d.user;document.getElementById('loginPass').value=d.pass;document.getElementById('rememberMe').checked=true;logar()}}catch(e){}}
-
+function autoLogin(){try{var r=localStorage.getItem('lembrar');if(r){try{var d=JSON.parse(r)}catch(e){d=r};document.getElementById('loginUser').value=d.user;document.getElementById('loginPass').value=d.pass;document.getElementById('rememberMe').checked=true;logar()}}catch(e){}}
 function ir(pagina){
   document.querySelectorAll('.sidebar-item').forEach(function(e){e.classList.remove('ativo')});
   var el=document.querySelector('.sidebar-item[onclick*="'+pagina+'"]');
   if(el)el.classList.add('ativo');
-  window['render'+pagina.charAt(0).toUpperCase()+pagina.slice(1)]();
+  var fn=window['render'+pagina.charAt(0).toUpperCase()+pagina.slice(1)];
+  if(fn)fn();else document.getElementById('conteudo').innerHTML='<div class="titulo-pag">'+pagina+'</div><p>Em construção</p>';
 }
 
 async function renderDashboard(){
   var main=document.getElementById('conteudo');
-  main.innerHTML='<div class="titulo-pag">📊 Dashboard</div><div class="cartoes" id="dashCards"></div><div class="grafico-card"><h3>📦 Valor em Estoque</h3><canvas id="grafPrincipal" style="max-height:280px"></canvas></div><div class="linha-graficos"><div class="grafico-card"><h3>📈 Lucro por Projeto</h3><canvas id="grafLucro"></canvas></div><div class="grafico-card"><h3>🎯 Status dos Leads</h3><canvas id="grafStatus" style="max-height:200px"></canvas></div></div><div class="grafico-card"><h3>📦 Alertas de Estoque</h3><div id="alertasEstoque"></div></div>';
+  main.innerHTML='<div class="titulo-pag">📊 Dashboard</div><div class="cartoes" id="dashCards"></div>'+
+    '<div class="grafico-card"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:8px"><h3 id="tituloToggle">📦 Valor em Estoque</h3><div id="infoExtra" style="font-size:13px;color:var(--primaria);font-weight:600"></div></div>'+
+    '<div class="barra-abas" id="barraToggle"><button class="ativo" onclick="trocarAba(\'estoque\')">📦 Estoque</button><button onclick="trocarAba(\'leads\')">👥 Leads</button><button onclick="trocarAba(\'vendas\')">💰 Vendas</button><button onclick="trocarAba(\'projetos\')">🔬 Projetos</button><button onclick="trocarAba(\'orcamentos\')">📋 Orçamentos</button></div>'+
+    '<div id="subBarra"></div><canvas id="grafToggle" style="max-height:320px"></canvas></div>'+
+    '<div class="linha-graficos"><div class="grafico-card"><h3>📈 Lucro por Projeto</h3><canvas id="grafLucro"></canvas></div><div class="grafico-card"><h3>📊 Vendas por Mês</h3><canvas id="grafVendasMes"></canvas></div></div>'+
+    '<div class="grafico-card"><h3>🎯 Status dos Leads</h3><canvas id="grafStatus" style="max-height:200px"></canvas></div>'+
+    '<div class="grafico-card"><h3>📦 Alertas de Estoque</h3><div id="alertasEstoque"></div></div>';
   try{
-    const[leads,vendas,estoque]=await Promise.all([sbGet('leads'),sbGet('vendas'),sbGet('estoque')]);
+    const[leads,vendas,estoque,projetos,orc_hist]=await Promise.all([sbGet('leads'),sbGet('vendas'),sbGet('estoque'),sbGet('projetos'),sbGet('orcamentos')]);
     var vends=leads.filter(function(l){return l.andamento=='Venda Fechada'}).length;
     var rec=vendas.reduce(function(s,v){return s+parseMon(v.valor)},0);
     var tx=leads.length>0?((vends/leads.length)*100).toFixed(1):0;
     var invT=0,invC=0;estoque.forEach(function(e){invT+=e.qtd*e.valor_venda;invC+=e.qtd*e.valor_pago});
-    document.getElementById('dashCards').innerHTML='<div class="cartao"><div class="rotulo">Leads</div><div class="valor">'+leads.length+'</div><div class="sub">'+vends+' convertidos ('+tx+'%)</div></div><div class="cartao"><div class="rotulo">Receita</div><div class="valor">R$ '+fmtNum(rec)+'</div><div class="sub">'+vendas.length+' vendas</div></div><div class="cartao"><div class="rotulo">Estoque</div><div class="valor">R$ '+fmtNum(invT)+'</div><div class="sub">Custo: R$ '+fmtNum(invC)+'</div></div>';
-    setTimeout(function(){fazerGraficos(estoque,vendas,leads)},200);
-    var c=estoque.filter(function(e){return e.qtd<=5}),b=estoque.filter(function(e){return e.qtd>5&&e.qtd<=15});
-    var ae=document.getElementById('alertasEstoque');
-    if(!c.length&&!b.length)ae.innerHTML='<p style="color:var(--sucesso);font-size:13px">✅ Todos ok</p>';
-    else{var h='';c.forEach(function(e){h+='<span style="display:inline-block;background:rgba(239,68,68,.15);color:#ef4444;padding:4px 10px;border-radius:20px;font-size:12px;margin:3px">🔴 '+e.item+': '+e.qtd+' '+e.un+'</span> '});b.forEach(function(e){h+='<span style="display:inline-block;background:rgba(245,158,11,.15);color:#f59e0b;padding:4px 10px;border-radius:20px;font-size:12px;margin:3px">🟡 '+e.item+': '+e.qtd+' '+e.un+'</span> '});ae.innerHTML=h}
+    var rP=projetos.filter(function(p){return p.pago=='SIM'}).reduce(function(s,p){return s+parseMon(p.valor)},0);
+    var totalOrc=orc_hist.reduce(function(s,o){return s+(o.total||0)},0);
+    document.getElementById('dashCards').innerHTML=
+      '<div class="cartao"><div class="rotulo">Leads</div><div class="valor">'+leads.length+'</div><div class="sub">'+vends+' convertidos ('+tx+'%)</div></div>'+
+      '<div class="cartao"><div class="rotulo">Receita</div><div class="valor">R$ '+fmtNum(rec)+'</div><div class="sub">'+vendas.length+' vendas</div></div>'+
+      '<div class="cartao"><div class="rotulo">Estoque</div><div class="valor">R$ '+fmtNum(invT)+'</div><div class="sub">Custo: R$ '+fmtNum(invC)+'</div></div>'+
+      '<div class="cartao"><div class="rotulo">Projetos</div><div class="valor">'+projetos.length+'</div><div class="sub">R$ '+fmtNum(rP)+' recebido</div></div>'+
+      '<div class="cartao"><div class="rotulo">Orçamentos</div><div class="valor">'+orc_hist.length+'</div><div class="sub">R$ '+fmtNum(totalOrc)+'</div></div>'+
+      '<div class="cartao"><div class="rotulo">Conversão</div><div class="valor">'+tx+'%</div><div class="sub">'+vends+'/'+leads.length+'</div></div>';
+    window._dashEstoque=estoque;window._dashVendas=vendas;window._dashLeads=leads;window._dashProjetos=projetos;
+    trocarAba(abaToggle);
+    setTimeout(function(){fazerGraficoLucro(vendas);fazerGraficoVendasMes(vendas);fazerGraficoStatus(leads);renderAlertas(estoque)},200);
   }catch(e){}
 }
-
-function fazerGraficos(estoque,vendas,leads){
+function trocarAba(aba){
+  abaToggle=aba;
+  var bts=document.querySelectorAll('#barraToggle button');
+  var mapa={estoque:'📦',leads:'👥',vendas:'💰',projetos:'🔬',orcamentos:'📋'};
+  for(var i=0;bts.length>i;i++)bts[i].classList.toggle('ativo',bts[i].textContent.includes(mapa[aba]));
+  var sub=document.getElementById('subBarra');
+  if(aba=='leads')sub.innerHTML='<div class="sub-barra"><button class="ativo" onclick="subLead=\'status\';trocarAba(\'leads\')">📊 Por Status</button><button onclick="subLead=\'vendedor\';trocarAba(\'leads\')">👤 Por Vendedor</button></div>';
+  else if(aba=='projetos')sub.innerHTML='<div class="sub-barra"><button class="ativo" onclick="subProj=\'empresa\';trocarAba(\'projetos\')">🏢 Por Empresa</button><button onclick="subProj=\'pago\';trocarAba(\'projetos\')">💰 Pago/Aberto</button></div>';
+  else sub.innerHTML='';
+  document.getElementById('tituloToggle').textContent={estoque:'📦 Valor em Estoque',leads:'👥 Leads - Valor em Aberto',vendas:'💰 Vendas por Mês',projetos:'🔬 Projetos',orcamentos:'📋 Orçamentos Gerados'}[aba];
+  fazerGraficoToggle();
+}
+function fazerGraficoToggle(){
   try{
-    if(!window.Chart)return;
     if(ultimoGrafico)ultimoGrafico.destroy();
-    var labs=[],vv=[],vp=[];
-    estoque.forEach(function(e){labs.push(e.item);vv.push(e.qtd*e.valor_venda);vp.push(e.qtd*e.valor_pago)});
-    if(!labs.length){labs.push('Sem dados');vv.push(0);vp.push(0)}
-    ultimoGrafico=new Chart(document.getElementById('grafPrincipal'),{type:'bar',data:{labels:labs,datasets:[{label:'Venda (R$)',data:vv,backgroundColor:'rgba(34,197,94,.7)'},{label:'Pago (R$)',data:vp,backgroundColor:'rgba(59,130,246,.7)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true}}}});
-    var l2=[],d2=[],c2=[],mx=vendas.length>10?10:vendas.length;
-    for(var i=0;mx>i;i++){l2.push(vendas[i].cliente.slice(0,12));var l=parseMon(vendas[i].valor)-parseMon(vendas[i].gasto);d2.push(l);c2.push(l>=0?'rgba(34,197,94,.8)':'rgba(239,68,68,.8)')}
-    if(!l2.length){l2.push('Sem dados');d2.push(0);c2.push('#555')}
-    new Chart(document.getElementById('grafLucro'),{type:'bar',data:{labels:l2,datasets:[{label:'Lucro',data:d2,backgroundColor:c2,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-    var g={};leads.forEach(function(l){var s=l.andamento;g[s]=(g[s]||0)+1});
-    new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:6,boxWidth:10}}}}});
+    var canvas=document.getElementById('grafToggle'),extra=document.getElementById('infoExtra'),ctx=canvas.getContext('2d');
+    var estoque=window._dashEstoque||[],vendas=window._dashVendas||[],leads=window._dashLeads||[],projetos=window._dashProjetos||[];
+    if(abaToggle=='estoque'){
+      var labs=[],vv=[],vp=[],te=0;
+      estoque.forEach(function(e){labs.push(e.item);vv.push(e.qtd*e.valor_venda);vp.push(e.qtd*e.valor_pago);te+=e.qtd*e.valor_venda});
+      extra.textContent='Total: R$ '+fmtNum(te);
+      if(!labs.length){labs.push('Sem dados');vv.push(0);vp.push(0)}
+      ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:labs,datasets:[{label:'Venda (R$)',data:vv,backgroundColor:'rgba(34,197,94,.7)',borderRadius:4},{label:'Pago (R$)',data:vp,backgroundColor:'rgba(59,130,246,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:12}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return'R$'+v.toFixed(0)}}}}}});
+    }else if(abaToggle=='leads'){
+      extra.textContent='';
+      if(subLead=='status'){var g={};leads.forEach(function(l){var s=l.andamento||'Sem';g[s]=(g[s]||0)+parseMon(l.valor)});ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:Object.keys(g),datasets:[{label:'Valor (R$)',data:Object.values(g),backgroundColor:'rgba(59,130,246,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}
+      else{var g={};leads.forEach(function(l){var s=l.vendedor||'Sem';g[s]=(g[s]||0)+parseMon(l.valor)});ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:Object.keys(g),datasets:[{label:'Valor (R$)',data:Object.values(g),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'].slice(0,Object.keys(g).length),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}
+    }else if(abaToggle=='vendas'){
+      var meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+      var dados=meses.map(function(m){var t=0;vendas.forEach(function(v){if(v.mes==m)t+=parseMon(v.valor)});return t});
+      var tg=dados.reduce(function(a,b){return a+b},0);
+      extra.textContent='Total: R$ '+fmtNum(tg)+' | '+vendas.length+' vendas';
+      ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:meses,datasets:[{label:'Receita (R$)',data:dados,backgroundColor:'rgba(34,197,94,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})
+    }else if(abaToggle=='projetos'){
+      extra.textContent='Total: '+projetos.length+' projetos';
+      if(subProj=='empresa'){var g={};projetos.forEach(function(p){g[p.empresa]=(g[p.empresa]||0)+parseMon(p.valor)});ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:Object.keys(g),datasets:[{label:'Valor (R$)',data:Object.values(g),backgroundColor:'rgba(20,184,166,.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}
+      else{var pg=0,ab=0;projetos.forEach(function(p){if(p.pago=='SIM')pg+=parseMon(p.valor);else ab+=parseMon(p.valor)});if(!pg&&!ab){pg=1;ab=1};ultimoGrafico=new Chart(ctx,{type:'doughnut',data:{labels:['✅ Pago','⏳ Aberto'],datasets:[{data:[pg,ab],backgroundColor:['#22c55e','#f59e0b'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{padding:12,boxWidth:12}}}}})}
+    }else if(abaToggle=='orcamentos'){
+      var g={};ORC_HIST.forEach(function(o){g[o.status||'Sem']=(g[o.status||'Sem']||0)+1});
+      if(Object.keys(g).length===0)g['Nenhum']=1
+      extra.textContent='Total: '+ORC_HIST.length+' orçamentos';
+      ultimoGrafico=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:['#22c55e','#f59e0b','#ef4444','#3b82f6','#a855f7'].slice(0,Object.keys(g).length),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{padding:8,boxWidth:12}}}}})
+    }
   }catch(e){}
 }
+function fazerGraficoLucro(vendas){
+  try{if(window._gl){window._gl.destroy()}var labs=[],dados=[],cores=[];var max=vendas.length>10?10:vendas.length;for(var i=0;max>i;i++){labs.push(vendas[i].cliente.slice(0,12));var l=parseMon(vendas[i].valor)-parseMon(vendas[i].gasto);dados.push(l);cores.push(l>=0?'rgba(34,197,94,.8)':'rgba(239,68,68,.8)')}if(!labs.length){labs.push('Sem dados');dados.push(0);cores.push('#555')};window._gl=new Chart(document.getElementById('grafLucro'),{type:'bar',data:{labels:labs,datasets:[{label:'Lucro',data:dados,backgroundColor:cores,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}catch(e){}
+}
+function fazerGraficoVendasMes(vendas){
+  try{if(window._gvm){window._gvm.destroy()}var meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];var dados=meses.map(function(m){var t=0;vendas.forEach(function(v){if(v.mes==m)t+=parseMon(v.valor)});return t});window._gvm=new Chart(document.getElementById('grafVendasMes'),{type:'line',data:{labels:meses,datasets:[{label:'Receita',data:dados,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',fill:true,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}catch(e){}
+}
+function fazerGraficoStatus(leads){
+  try{if(window._gs){window._gs.destroy()}var g={};leads.forEach(function(l){g[l.andamento]=(g[l.andamento]||0)+1});var paleta=['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316','#6b7280'];window._gs=new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k,i){return paleta[i%paleta.length]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}}})}catch(e){}
+}
+function renderAlertas(estoque){
+  var el=document.getElementById('alertasEstoque');if(!el)return;
+  var c=estoque.filter(function(e){return e.qtd<=5}),b=estoque.filter(function(e){return e.qtd>5&&e.qtd<=15});
+  if(!c.length&&!b.length){el.innerHTML='<p style="color:var(--sucesso)">✅ Todos ok</p>';return}
+  var h='';c.forEach(function(e){h+='<span style="display:inline-block;background:rgba(239,68,68,.15);color:#ef4444;padding:4px 10px;border-radius:20px;font-size:12px;margin:3px">🔴 '+e.item+': '+e.qtd+' '+e.un+'</span> '});
+  b.forEach(function(e){h+='<span style="display:inline-block;background:rgba(245,158,11,.15);color:#f59e0b;padding:4px 10px;border-radius:20px;font-size:12px;margin:3px">🟡 '+e.item+': '+e.qtd+' '+e.un+'</span> '});el.innerHTML=h;
+}
 
-// Leads, Vendas, Gastos, Projetos, Orcamentos, Estoque, Config...
-// (as funcoes seguem o mesmo padrao - voce ja viu o codigo completo nas mensagens anteriores)
-// Resumo: cada funcao busca dados com sbGet(), renderiza tabela, e usa sbInsert/sbUpdate/sbDelete
-
-// PLACEHOLDER para as demais abas
-async function renderLeads(){document.getElementById('conteudo').innerHTML='<div class="titulo-pag">👥 Leads</div><p>Carregando...</p>';const d=await sbGet('leads');var h='<div class="titulo-pag">👥 Leads</div><p>'+d.length+' leads</p><div class="tabela-wrap"><table><thead><tr><th>Nome</th><th>Cidade</th><th>Valor</th><th>Andamento</th><th>Vendedor</th></tr></thead><tbody>';d.forEach(function(l){h+='<tr><td>'+l.nome+'</td><td>'+(l.cidade||'')+'</td><td>'+l.valor+'</td><td>'+(l.andamento||'')+'</td><td>'+(l.vendedor||'')+'</td></tr>'});h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;}
-async function renderVendas(){const d=await sbGet('vendas');var h='<div class="titulo-pag">💰 Vendas</div><p>'+d.length+' vendas</p><div class="tabela-wrap"><table><thead><tr><th>Cliente</th><th>Empresa</th><th>Valor</th><th>Mês</th></tr></thead><tbody>';d.forEach(function(v){h+='<tr><td>'+v.cliente+'</td><td>'+v.empresa+'</td><td>'+v.valor+'</td><td>'+(v.mes||'')+'</td></tr>'});h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;}
-async function renderGastos(){const d=await sbGet('gastos');var h='<div class="titulo-pag">🧾 Gastos</div><p>'+d.length+' registros</p><div class="tabela-wrap"><table><thead><tr><th>Cliente</th><th>Valor</th><th>Gasto</th><th>Lucro</th></tr></thead><tbody>';d.forEach(function(g){h+='<tr><td>'+g.cliente+'</td><td>'+g.valor_venda+'</td><td>'+g.gasto+'</td><td>'+g.lucro+'</td></tr>'});h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;}
-async function renderProjetos(){const d=await sbGet('projetos');var h='<div class="titulo-pag">🔬 Projetos</div><p>'+d.length+' projetos</p><div class="tabela-wrap"><table><thead><tr><th>Cliente</th><th>Empresa</th><th>Valor</th><th>TRT</th></tr></thead><tbody>';d.forEach(function(p){h+='<tr><td>'+p.cliente+'</td><td>'+p.empresa+'</td><td>'+p.valor+'</td><td>'+p.trt+'</td></tr>'});h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;}
-async function renderOrcamentos(){document.getElementById('conteudo').innerHTML='<div class="titulo-pag">📋 Orçamentos</div><p>'+ (await sbGet('orcamentos')).length+' orçamentos</p>';}
-async function renderEstoque(){const d=await sbGet('estoque');var h='<div class="titulo-pag">📦 Estoque</div><p>'+d.length+' itens</p><div class="tabela-wrap"><table><thead><tr><th>Item</th><th>Tipo</th><th>Qtd</th><th>Vlr Venda</th></tr></thead><tbody>';d.forEach(function(e){h+='<tr><td>'+e.item+'</td><td>'+e.tipo+'</td><td>'+e.qtd+'</td><td>R$ '+fmtNum(e.valor_venda)+'</td></tr>'});h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;}
-async function renderConfig(){document.getElementById('conteudo').innerHTML='<div class="titulo-pag">⚙️ Config</div><p>Gerenciamento de usuários</p>';}
+// ========== LEADS ==========
+async function renderLeads(){
+  const dados=await sbGet('leads');
+  var sts=['Venda Fechada','Negociação','Apresentação do Pojeto','Orçamento Gerado','Contato Inicial','Sem Resposta','Desistiu','Fechou com outra empresa'],vnd=['João','Bruno','Vinicius','Sistema'];
+  var h='<div class="titulo-pag">👥 Leads</div><p style="margin-bottom:12px;color:var(--text2)">'+dados.length+' leads</p><div class="tabela-wrap"><table><thead><tr><th>Nome</th><th>Cidade</th><th>Origem</th><th>Valor</th><th>Contato</th><th>Data</th><th>Andamento</th><th>Vendedor</th><th>Ações</th></tr></thead><tbody>';
+  dados.forEach(function(l){
+    var ops=sts.map(function(s){return'<option value="'+s+'"'+(l.andamento==s?' selected':'')+'>'+s+'</option>'}).join('');
+    var opv=vnd.map(function(s){return'<option value="'+s+'"'+(l.vendedor==s?' selected':'')+'>'+s+'</option>'}).join('');
+    h+='<tr><td>'+l.nome+'</td><td>'+(l.cidade||'')+'</td><td>'+(l.origem||'')+'</td><td>'+l.valor+'</td><td>'+(l.contato||'')+'</td><td><input class="edita-input" style="width:85px" value="'+(l.data||'')+'" onchange="altLead('+l.id+',\'data\',this.value)"></td><td><select class="edita-select" style="width:145px" onchange="mudarAndamento('+l.id+',this.value,\''+l.andamento+'\')">'+ops+'</select></td><td><select class="edita-select" style="width:90px" onchange="altLead('+l.id+',\'vendedor\',this.value)">'+opv+'</select></td><td>'+(l.andamento!='Venda Fechada'?'<button class="btn-icone" onclick="editLead('+l.id+')">✏️</button>':'✅')+'</td></tr>';
+  });
+  if(!dados.length)h+='<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text2)">Nenhum lead cadastrado. Crie um orçamento primeiro ou insira manualmente.</td></tr>';
+  h+='</tbody></table></div><div style="margin-top:12px"><button class="btn btn-primary" onclick="addLeadManual()">+ Novo Lead</button></div>';
+  document.getElementById('conteudo').innerHTML=h;
+}
+async function altLead(id,c,v){await sbUpdate('leads',id,{[c]:v})}
+async function mudarAndamento(id,v,ant){
+  if(v=='Venda Fechada'&&ant!='Venda Fechada'){
+    const{data}=await sb.from('leads').select('*').eq('id',id).single();
+    if(data){idxVender=data;document.getElementById('infoGasto').textContent='Cliente: '+data.nome+' | '+hoje();
+    document.getElementById('gastoValor').value=data.valor||'';document.getElementById('gastoGasto').value='';document.getElementById('gastoEmpresa').value='SF';document.getElementById('gastoPotencia').value='';
+    document.getElementById('modalGasto').classList.add('show')}return;
+  }
+  await sbUpdate('leads',id,{andamento:v});renderLeads();
+}
+async function editLead(id){
+  const{data}=await sb.from('leads').select('*').eq('id',id).single();
+  if(!data||data.andamento=='Venda Fechada')return;
+  var n=prompt('Nome:',data.nome);if(n){data.nome=n}var c=prompt('Cidade:',data.cidade);if(c){data.cidade=c}
+  var o=prompt('Origem:',data.origem);if(o){data.origem=o}var ct=prompt('Contato:',data.contato);if(ct){data.contato=ct}
+  await sbUpdate('leads',id,{nome:data.nome,cidade:data.cidade,origem:data.origem,contato:data.contato});renderLeads();
+}
+async function addLeadManual(){
+  var n=prompt('Nome do lead:');if(!n)return;var c=prompt('Cidade:','')||'';var o=prompt('Origem:','')||'';var v=prompt('Valor:','R$ 0,00')||'R$ 0,00';
+  await sbInsert('leads',{nome:n,cidade:c,origem:o,valor:v,data:hoje(),andamento:'Contato Inicial',vendedor:'Sistema'});renderLeads();
+}
 function fecharModalGasto(){document.getElementById('modalGasto').classList.remove('show');idxVender=null}
+async function confirmarVenda(){
+  if(!idxVender)return;var vl=document.getElementById('gastoValor').value.trim(),g=document.getElementById('gastoGasto').value.trim(),emp=document.getElementById('gastoEmpresa').value,pot=document.getElementById('gastoPotencia').value.trim();
+  if(!vl||!g){alert('Preencha valor e gasto');return}var mm=mesesNome()[new Date().getMonth()];
+  await sbInsert('vendas',{cliente:idxVender.nome,empresa:emp,potencia:pot,mes:mm,valor:vl,pago:'SIM',gasto:'R$ '+fmtNum(parseMon(g))});
+  await sbInsert('gastos',{venda:idxVender.nome,cliente:idxVender.nome,empresa:emp,mes:mm,valor_venda:vl,gasto:'R$ '+fmtNum(parseMon(g)),lucro:'R$ '+fmtNum(parseMon(vl)-parseMon(g))});
+  fecharModalGasto();renderLeads();
+}
+
+// ========== VENDAS ==========
+async function renderVendas(){
+  const dados=await sbGet('vendas');var emps=['SF','SPAZZIO','BRANCO','ÉTHOS','SOLAR FORCE','TAQUARI'],ms=mesesNome();
+  var total=dados.reduce(function(s,v){return s+parseMon(v.valor)},0);
+  var h='<div class="titulo-pag">💰 Vendas</div><p style="margin-bottom:12px;color:var(--text2)">'+dados.length+' vendas • R$ '+fmtNum(total)+'</p><div class="tabela-wrap"><table><thead><tr><th>Cliente</th><th>Empresa</th><th>Potência</th><th>Mês</th><th>Valor</th><th>Pago</th><th>Gasto</th><th>Ações</th></tr></thead><tbody>';
+  dados.forEach(function(v){
+    var oe=emps.map(function(e){return'<option value="'+e+'"'+(v.empresa==e?' selected':'')+'>'+e+'</option>'}).join('');
+    var om=ms.map(function(e){return'<option value="'+e+'"'+(v.mes==e?' selected':'')+'>'+e+'</option>'}).join('');
+    h+='<tr><td>'+v.cliente+'</td><td><select class="edita-select" style="width:95px" onchange="altVenda('+v.id+',\'empresa\',this.value)">'+oe+'</select></td><td>'+v.potencia+'</td><td><select class="edita-select" style="width:100px" onchange="altVenda('+v.id+',\'mes\',this.value)">'+om+'</select></td><td>'+v.valor+'</td><td><select class="edita-select" style="width:70px" onchange="altVenda('+v.id+',\'pago\',this.value)"><option value="SIM"'+(v.pago=='SIM'?' selected':'')+'>SIM</option><option value="NÃO"'+(v.pago=='NÃO'?' selected':'')+'>NÃO</option></select></td><td>'+v.gasto+'</td><td><button class="btn-icone" onclick="delVenda('+v.id+')">🗑️</button></td></tr>';
+  });
+  if(!dados.length)h+='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text2)">Nenhuma venda</td></tr>';
+  h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;
+}
+async function altVenda(id,c,v){await sbUpdate('vendas',id,{[c]:v})}
+async function delVenda(id){if(!confirm('Excluir venda?'))return;await sbDelete('vendas',id);renderVendas()}
+
+// ========== GASTOS ==========
+async function renderGastos(){
+  let dados=await sbGet('gastos');
+  if(!dados.length){const vendas=await sbGet('vendas');if(vendas.length){for(var i=0;vendas.length>i;i++){var v=vendas[i],l=parseMon(v.valor)-parseMon(v.gasto);await sbInsert('gastos',{venda:v.cliente,cliente:v.cliente,empresa:v.empresa,mes:v.mes,valor_venda:v.valor,gasto:v.gasto,lucro:'R$ '+fmtNum(l)})}}dados=await sbGet('gastos')}
+  var h='<div class="titulo-pag">🧾 Gastos</div><p style="margin-bottom:12px;color:var(--text2)">'+dados.length+' registros</p><div class="tabela-wrap"><table><thead><tr><th>Venda</th><th>Cliente</th><th>Empresa</th><th>Mês</th><th>Valor</th><th>Gasto</th><th>Lucro</th></tr></thead><tbody>';
+  var tl=0;
+  dados.forEach(function(g){tl+=parseMon(g.lucro);h+='<tr><td>'+g.venda+'</td><td>'+g.cliente+'</td><td>'+(g.empresa||'')+'</td><td>'+(g.mes||'')+'</td><td>'+(g.valor_venda||'')+'</td><td>'+(g.gasto||'')+'</td><td style="font-weight:600;color:'+(parseMon(g.lucro)>=0?'var(--sucesso)':'var(--perigo)')+'">'+g.lucro+'</td></tr>'});
+  h+='<tr style="font-weight:700;background:var(--bg3)"><td colspan="6">LUCRO TOTAL</td><td style="color:'+(tl>=0?'var(--sucesso)':'var(--perigo)')+'">R$ '+fmtNum(tl)+'</td></tr></tbody></table></div>';document.getElementById('conteudo').innerHTML=h;
+}
+
+// ========== PROJETOS ==========
+async function renderProjetos(){
+  const dados=await sbGet('projetos');
+  var rt=0,trt=0;dados.forEach(function(p){rt+=parseMon(p.valor);trt+=parseMon(p.trt)});
+  var h='<div class="titulo-pag">🔬 Projetos</div><div class="cartoes"><div class="cartao"><div class="rotulo">Total</div><div class="valor">'+dados.length+'</div><div class="sub">R$ '+fmtNum(rt)+'</div></div><div class="cartao"><div class="rotulo">TRT</div><div class="valor">R$ '+fmtNum(trt)+'</div></div><div class="cartao"><div class="rotulo">Líquido</div><div class="valor">R$ '+fmtNum(rt-trt)+'</div></div></div>'+
+    '<div style="background:var(--bg2);border:1px solid var(--borda);border-radius:10px;padding:16px;margin-bottom:14px"><h3 style="font-size:14px;font-weight:600;margin-bottom:10px">📝 Novo Projeto</h3>'+
+    '<div class="form-grid-3"><div class="grupo"><label>Cliente</label><input id="pCliente"></div><div class="grupo"><label>Empresa</label><input id="pEmpresa" list="pList"><datalist id="pList"></datalist></div><div class="grupo"><label>Data</label><input type="text" id="pData"></div>'+
+    '<div class="grupo"><label>Valor (R$)</label><input type="text" id="pValor"></div><div class="grupo"><label>TRT (R$)</label><input type="text" id="pTrt"></div><div class="grupo"><label>Pago</label><select id="pPago"><option>NÃO</option><option>SIM</option></select></div></div>'+
+    '<button class="btn btn-primary" onclick="salvarProj()" style="margin-top:6px">💾 Salvar</button><button class="btn btn-outline" onclick="limparProj()" style="margin-top:6px;margin-left:6px">🆕 Novo</button><div id="pMsg" style="margin-top:6px;font-size:13px;color:var(--sucesso)"></div></div>'+
+    '<div class="tabela-wrap"><table><thead><tr><th>Cliente</th><th>Empresa</th><th>Data</th><th>Valor</th><th>TRT</th><th>Líquido</th><th>Pago</th><th>Ações</th></tr></thead><tbody>';
+  dados.forEach(function(p){var liq=parseMon(p.valor)-parseMon(p.trt);h+='<tr><td>'+p.cliente+'</td><td>'+p.empresa+'</td><td>'+(p.data||'')+'</td><td>R$ '+fmtNum(parseMon(p.valor))+'</td><td>R$ '+fmtNum(parseMon(p.trt))+'</td><td style="font-weight:600;color:'+(liq>=0?'var(--sucesso)':'var(--perigo)')+'">R$ '+fmtNum(liq)+'</td><td><select class="edita-select" style="width:65px" onchange="altPagoProj('+p.id+',this.value)"><option value="NÃO"'+(p.pago=='NÃO'?' selected':'')+'>NÃO</option><option value="SIM"'+(p.pago=='SIM'?' selected':'')+'>SIM</option></select></td><td><button class="btn-icone" onclick="editProj('+p.id+')">✏️</button><button class="btn-icone" onclick="delProj('+p.id+')">🗑️</button></td></tr>'});
+  if(!dados.length)h+='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text2)">Nenhum projeto</td></tr>';
+  h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;
+  var dl=document.getElementById('pList');if(dl){dl.innerHTML='';['SF Projetos','SolarTech','EcoSun','GreenPower','LuzSolar','MegaWatt'].forEach(function(e){dl.innerHTML+='<option value="'+e+'">'})}
+  if(!document.getElementById('pData').value)document.getElementById('pData').value=hoje();
+  if(!document.getElementById('pTrt').value)document.getElementById('pTrt').value='R$ 70,00';
+}
+async function salvarProj(){var cl=document.getElementById('pCliente').value.trim(),em=document.getElementById('pEmpresa').value.trim(),dt=document.getElementById('pData').value.trim()||hoje(),vl=document.getElementById('pValor').value.trim(),tr=document.getElementById('pTrt').value.trim(),pg=document.getElementById('pPago').value;if(!cl){document.getElementById('pMsg').textContent='Informe o cliente';return}if(idxEditProj){await sbUpdate('projetos',idxEditProj,{cliente:cl,empresa:em,data:dt,valor:vl||'R$ 0,00',trt:tr||'R$ 0,00',pago:pg});document.getElementById('pMsg').textContent='Atualizado!';idxEditProj=null}else{await sbInsert('projetos',{cliente:cl,empresa:em,data:dt,valor:vl||'R$ 0,00',trt:tr||'R$ 0,00',pago:pg});document.getElementById('pMsg').textContent='Salvo!'}limparProj();renderProjetos();}
+function limparProj(){document.getElementById('pCliente').value='';document.getElementById('pEmpresa').value='';document.getElementById('pValor').value='';document.getElementById('pData').value=hoje();document.getElementById('pTrt').value='R$ 70,00';document.getElementById('pPago').value='NÃO';document.getElementById('pMsg').textContent='';idxEditProj=null}
+async function altPagoProj(id,v){await sbUpdate('projetos',id,{pago:v})}
+async function editProj(id){const{data}=await sb.from('projetos').select('*').eq('id',id).single();if(!data)return;idxEditProj=data.id;document.getElementById('pCliente').value=data.cliente;document.getElementById('pEmpresa').value=data.empresa;document.getElementById('pData').value=data.data||hoje();document.getElementById('pValor').value=data.valor;document.getElementById('pTrt').value=data.trt||'R$ 70,00';document.getElementById('pPago').value=data.pago||'NÃO';document.getElementById('pMsg').textContent='✏️ Editando...'}
+async function delProj(id){if(!confirm('Excluir?'))return;await sbDelete('projetos',id);renderProjetos()}
+
+// ========== ORÇAMENTOS ==========
+var ORC_HIST=[];
+async function renderOrcamentos(){
+  ORC_HIST=await sbGet('orcamentos');
+  document.getElementById('conteudo').innerHTML='<div class="titulo-pag">📋 Orçamentos</div>'+
+    '<div class="orc-tema" style="background:#0f1724;border-radius:12px;padding:20px">'+
+    '<div class="orc-nav"><span class="ativo" onclick="navOrc(\'criar\')">💰 Criar</span><span onclick="navOrc(\'hist\')">📜 Histórico</span></div><div id="orcBody">'+htmlCriarOrc()+'</div></div>';
+  document.getElementById('orcId').value=await gerarOrcId();carregarSelectOrc();
+}
+async function gerarOrcId(){var m=String(new Date().getMonth()+1).padStart(2,'0'),a=String(anoAtual()).slice(-2),pre=m+'/'+a+'/';var seq=[];if(ORC_HIST.length===0)ORC_HIST=await sbGet('orcamentos');ORC_HIST.forEach(function(o){if(o.id&&o.id.indexOf(pre)===0){var n=parseInt(o.id.split('/')[2]);if(!isNaN(n))seq.push(n)}});var mx=seq.length?Math.max.apply(null,seq):0;return pre+String(mx+1).padStart(3,'0')}
+function htmlCriarOrc(){return '<div class="form-grid"><div class="grupo"><label>ID</label><input id="orcId" readonly style="font-weight:700"></div><div class="grupo"><label>Status</label><select id="orcStatus"><option>Aguardando Pedido</option><option>Aprovado</option><option>Cancelado</option><option>Em Negociação</option></select></div><div class="grupo"><label>Nome</label><input id="orcNome"></div><div class="grupo"><label>Telefone</label><input id="orcTel"></div><div class="grupo"><label>Endereço</label><input id="orcEnd"></div><div class="grupo"><label>Título</label><input id="orcTit"></div><div class="grupo"><label>Validade</label><input id="orcVal"></div><div class="grupo"><label>Pagamento</label><input id="orcPag"></div><div class="grupo"><label>Vendedor</label><select id="orcVend"><option>João</option><option>Bruno</option><option>Vinicius</option><option>Sistema</option></select></div><div class="grupo"><label>Cidade</label><input id="orcCid"></div></div><div style="display:flex;gap:8px;align-items:end;margin-bottom:12px"><div class="grupo" style="flex:2"><label>Item</label><select id="orcSel"><option>Carregando...</option></select></div><div class="grupo"><label>Qtd</label><input type="number" id="orcQtd" value="1"></div><button class="btn btn-success" style="margin-bottom:4px" onclick="addItemOrc()">+</button></div><div class="tabela-wrap" style="margin-bottom:12px"><table><thead><tr><th>Item</th><th>Tipo</th><th>Marca</th><th>Qtd</th><th>Valor</th><th>Total</th><th>Ação</th></tr></thead><tbody id="orcItensBody"></tbody></table></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px"><div class="cartao"><div class="rotulo">Subtotal</div><div class="valor" id="orcSub" style="font-size:18px">R$ 0,00</div></div><div class="grupo"><label>Desc %</label><input type="number" id="orcDesc" value="0" oninput="calcOrc()"></div><div class="grupo"><label>Taxa</label><input type="number" id="orcTax" value="0" oninput="calcOrc()"></div><div class="cartao" style="border-left:3px solid var(--primaria)"><div class="rotulo">Total</div><div class="valor" id="orcTot" style="font-size:18px;color:var(--primaria)">R$ 0,00</div></div></div><div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="salvarOrc()">💾 Salvar</button><button class="btn btn-success" onclick="pdfOrc()">📄 PDF</button><button class="btn btn-outline" onclick="novoOrc()">🆕 Novo</button></div><div id="orcMsg" style="margin-top:6px;font-size:13px;color:var(--sucesso)"></div>'}
+async function carregarSelectOrc(){const estq=await sbGet('estoque');var sel=document.getElementById('orcSel');if(!sel)return;sel.innerHTML='<option value="">Selecione</option>';estq.forEach(function(e){sel.innerHTML+='<option value="'+e.id+'">'+e.item+' — R$ '+fmtNum(e.valor_venda)+(e.qtd>0?' ['+e.qtd+' '+e.un+']':'')+'</option>'});if(!estq.length)sel.innerHTML='<option value="">Estoque vazio - cadastre itens</option>'}
+function calcOrc(){var s=0;ORC_ITENS.forEach(function(i){s+=i.total});var d=parseFloat(document.getElementById('orcDesc').value)||0,tx=parseFloat(document.getElementById('orcTax').value)||0,t=s*(1-d/100)+tx;document.getElementById('orcSub').textContent='R$ '+fmtNum(s);document.getElementById('orcTot').textContent='R$ '+fmtNum(t);return{s,d,tx,t}}
+async function novoOrc(){ORC_ITENS=[];['orcNome','orcTel','orcEnd','orcTit','orcVal','orcPag','orcCid'].forEach(function(c){try{document.getElementById(c).value=''}catch(e){}});document.getElementById('orcDesc').value='0';document.getElementById('orcTax').value='0';document.getElementById('orcId').value=await gerarOrcId();calcOrc();document.getElementById('orcMsg').textContent='';document.getElementById('orcItensBody').innerHTML='';carregarSelectOrc()}
+async function addItemOrc(){var sel=document.getElementById('orcSel');if(!sel||!sel.value)return;var qtd=parseInt(document.getElementById('orcQtd').value)||1;const{data}=await sb.from('estoque').select('*').eq('id',parseInt(sel.value)).single();if(!data)return;ORC_ITENS.push({id:Date.now(),item:data.item,tipo:data.tipo,marca:data.marca||'',qtd:qtd,valor:data.valor_venda||0,total:qtd*(data.valor_venda||0)});renderItensOrc();calcOrc()}
+function renderItensOrc(){var tb=document.getElementById('orcItensBody');if(!tb)return;tb.innerHTML='';ORC_ITENS.forEach(function(it){tb.innerHTML+='<tr><td>'+it.item+'</td><td>'+it.tipo+'</td><td>'+(it.marca||'')+'</td><td>'+it.qtd+'</td><td>R$ '+fmtNum(it.valor)+'</td><td>R$ '+fmtNum(it.total)+'</td><td><button class="btn-icone" onclick="remItemOrc('+it.id+')">❌</button></td></tr>'})}
+function remItemOrc(id){ORC_ITENS=ORC_ITENS.filter(function(i){return i.id!=id});renderItensOrc();calcOrc()}
+async function salvarOrc(){var nome=document.getElementById('orcNome').value.trim();if(!nome){document.getElementById('orcMsg').textContent='Informe o cliente';return}var cal=calcOrc(),id=document.getElementById('orcId').value||await gerarOrcId();await sbInsert('orcamentos',{id:id,nome:nome,tel:document.getElementById('orcTel').value,endereco:document.getElementById('orcEnd').value,titulo:document.getElementById('orcTit').value,validade:document.getElementById('orcVal').value,pagamento:document.getElementById('orcPag').value,vendedor:document.getElementById('orcVend').value,cidade:document.getElementById('orcCid').value,status:document.getElementById('orcStatus').value,itens:JSON.parse(JSON.stringify(ORC_ITENS)),subtotal:cal.s,desconto:cal.d,taxa:cal.tx,total:cal.t,data:hoje()});const{data:lead}=await sb.from('leads').select('*').eq('nome',nome).maybeSingle();if(!lead){await sbInsert('leads',{nome:nome,cidade:document.getElementById('orcCid').value||'',origem:'Orçamento',valor:'R$ '+fmtNum(cal.t),contato:document.getElementById('orcTel').value,data:hoje(),andamento:'Orçamento Gerado',vendedor:document.getElementById('orcVend').value||'Sistema',obs:'Orçamento '+id})}for(var i=0;ORC_ITENS.length>i;i++){const{data:e}=await sb.from('estoque').select('*').eq('item',ORC_ITENS[i].item).maybeSingle();if(e){await sbUpdate('estoque',e.id,{qtd:Math.max(0,e.qtd-ORC_ITENS[i].qtd)})}}document.getElementById('orcMsg').textContent='✅ Orçamento '+id+' salvo!';ORC_HIST.unshift({id:id,nome:nome,total:cal.t,status:document.getElementById('orcStatus').value,data:hoje()});novoOrc();}
+function pdfOrc(){var nome=document.getElementById('orcNome').value.trim()||'Cliente',cal=calcOrc();if(typeof window.jspdf=='undefined'&&typeof jsPDF=='undefined'){alert('PDF: aguarde o carregamento da biblioteca');return}var {jsPDF}=window.jspdf||window;var doc=new jsPDF();doc.setFontSize(16);doc.text('SF Projetos Elétricos',14,22);doc.setFontSize(10);doc.text('Orçamento: '+document.getElementById('orcId').value,14,32);doc.text('Cliente: '+nome,14,42);doc.text('Data: '+hoje(),14,50);var d=[['Item','Qtd','V.Unit','Total']];ORC_ITENS.forEach(function(i){d.push([i.item,String(i.qtd),'R$ '+fmtNum(i.valor),'R$ '+fmtNum(i.total)])});if(doc.autoTable){doc.autoTable({startY:58,head:[d[0]],body:d.slice(1),theme:'striped',headStyles:{fillColor:[37,99,235]}});var y=doc.lastAutoTable.finalY+10;doc.text('Total: R$ '+fmtNum(cal.t),160,y)}doc.save('orcamento_'+nome.replace(/\s/g,'_')+'.pdf')}
+function navOrc(pg){document.getElementById('orcBody').innerHTML=pg=='criar'?htmlCriarOrc():htmlHistOrc();document.querySelectorAll('.orc-nav span').forEach(function(e){e.classList.toggle('ativo',e.textContent.includes(pg=='criar'?'💰':'📜'))});if(pg=='criar'){carregarSelectOrc();document.getElementById('orcId').value=gerarOrcId()}if(pg=='hist')carregarHistOrc()}
+function htmlHistOrc(){return '<div class="tabela-wrap"><table><thead><tr><th>ID</th><th>Cliente</th><th>Status</th><th>Total</th><th>Data</th><th>Ações</th></tr></thead><tbody id="orcHistBody"></tbody></table></div>'}
+async function carregarHistOrc(){const dados=await sbGet('orcamentos');var tb=document.getElementById('orcHistBody');if(!tb)return;tb.innerHTML='';if(!dados.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text2)">Nenhum orçamento</td></tr>';return}dados.forEach(function(o){tb.innerHTML+='<tr><td><strong>'+o.id+'</strong></td><td>'+o.nome+'</td><td><span class="badge '+(o.status=='Aprovado'?'badge-green':o.status=='Cancelado'?'badge-red':'badge-yellow')+'">'+(o.status||'')+'</span></td><td>R$ '+fmtNum(o.total)+'</td><td>'+(o.data||'')+'</td><td><button class="btn-icone" onclick="delOrcHist(\''+o.id+'\')">🗑️</button></td></tr>'})}
+async function delOrcHist(id){if(!confirm('Excluir?'))return;await sb.from('orcamentos').delete().eq('id',id);await renderOrcamentos()}
+
+// ========== ESTOQUE ==========
+async function renderEstoque(){
+  const dados=await sbGet('estoque');var ct=0,vt=0;dados.forEach(function(e){ct+=e.qtd*e.valor_pago;vt+=e.qtd*e.valor_venda});
+  var h='<div class="titulo-pag">📦 Estoque</div><p style="margin-bottom:12px;color:var(--text2)">'+dados.length+' itens • Custo: R$ '+fmtNum(ct)+' • Venda: R$ '+fmtNum(vt)+'</p><button class="btn btn-success" onclick="abrirModalEstq()" style="margin-bottom:12px">+ Novo</button><div class="estq-grid">';
+  dados.forEach(function(e){var c=e.qtd<=3?'critico':e.qtd<=10?'baixo':'ok';h+='<div class="estq-item"><div class="nome">'+e.item+'</div><div class="info">'+(e.marca?e.marca+' ':'')+e.tipo+'</div><div class="qtd '+c+'">'+e.qtd+' <span style="font-size:12px;color:var(--text2)">'+e.un+'</span></div></div>'});
+  h+='</div><div class="tabela-wrap"><table><thead><tr><th>Item</th><th>Tipo</th><th>Marca</th><th>Qtd</th><th>Un</th><th>Vlr Pago</th><th>Vlr Venda</th><th>Total</th><th>Fornecedor</th><th>Ações</th></tr></thead><tbody>';
+  dados.forEach(function(e){h+='<tr><td>'+e.item+'</td><td>'+(e.tipo||'')+'</td><td>'+(e.marca||'')+'</td><td style="font-weight:600;color:'+(e.qtd<=3?'var(--perigo)':e.qtd<=10?'var(--aviso)':'var(--sucesso)')+'">'+e.qtd+'</td><td>'+e.un+'</td><td>R$ '+fmtNum(e.valor_pago)+'</td><td>R$ '+fmtNum(e.valor_venda)+'</td><td>R$ '+fmtNum(e.qtd*e.valor_venda)+'</td><td>'+(e.fornec||'')+'</td><td><button class="btn-icone" onclick="editEstq('+e.id+')">✏️</button><button class="btn-icone" onclick="delEstq('+e.id+')">🗑️</button></td></tr>'});
+  if(!dados.length)h+='<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--text2)">Vazio</td></tr>';h+='</tbody></table></div>';document.getElementById('conteudo').innerHTML=h;
+}
+function abrirModalEstq(item){idEditEstq=item?item.id:null;document.getElementById('tituloEstoque').textContent=item?'Editar':'Novo';document.getElementById('estqItem').value=item?item.item:'';document.getElementById('estqTipo').value=item?item.tipo:'';document.getElementById('estqMarca').value=item?item.marca:'';document.getElementById('estqQtd').value=item?item.qtd:0;document.getElementById('estqUn').value=item?item.un:'un';document.getElementById('estqPago').value=item?item.valor_pago:'';document.getElementById('estqVenda').value=item?item.valor_venda:'';document.getElementById('estqFornec').value=item?item.fornec:'';document.getElementById('modalEstoque').classList.add('show')}
 function fecharModalEstoque(){document.getElementById('modalEstoque').classList.remove('show')}
-async function confirmarVenda(){if(!idxVender)return;alert('Venda registrada!');fecharModalGasto();renderLeads();}
-async function salvarEstoque(){alert('Item salvo!');fecharModalEstoque();renderEstoque();}
+async function salvarEstoque(){var item=document.getElementById('estqItem').value.trim(),tipo=document.getElementById('estqTipo').value.trim(),marca=document.getElementById('estqMarca').value.trim(),qtd=parseInt(document.getElementById('estqQtd').value)||0,un=document.getElementById('estqUn').value,vp=parseFloat(document.getElementById('estqPago').value)||0,vv=parseFloat(document.getElementById('estqVenda').value)||0,fornec=document.getElementById('estqFornec').value.trim();if(!item){alert('Nome obrigatório');return}if(idEditEstq){await sbUpdate('estoque',idEditEstq,{item,tipo,marca,qtd,un,valor_pago:vp,valor_venda:vv,fornec})}else{await sbInsert('estoque',{item,tipo,marca,qtd,un,valor_pago:vp,valor_venda:vv,fornec})}fecharModalEstoque();renderEstoque()}
+async function editEstq(id){const{data}=await sb.from('estoque').select('*').eq('id',id).single();if(data)abrirModalEstq(data)}
+async function delEstq(id){if(!confirm('Excluir?'))return;await sbDelete('estoque',id);renderEstoque()}
+
+// ========== CONFIG ==========
+async function renderConfig(){
+  const dados=await sbGet('usuarios');
+  var h='<div class="titulo-pag">⚙️ Configurações</div><div style="background:var(--bg2);border:1px solid var(--borda);border-radius:10px;padding:16px;margin-bottom:14px"><h3 style="font-size:14px;font-weight:600;margin-bottom:10px">👤 Novo Usuário</h3><div class="form-grid" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="grupo"><label>Nome</label><input id="cNome"></div><div class="grupo"><label>Usuário</label><input id="cUser"></div><div class="grupo"><label>Senha</label><input type="password" id="cPass"></div><div class="grupo"><label>Função</label><select id="cFun"><option>Vendedor</option><option>Administrador</option><option>Financeiro</option></select></div></div><button class="btn btn-primary" onclick="addUser()" style="margin-top:6px">+ Cadastrar</button><div id="cMsg" style="margin-top:6px;font-size:13px;color:var(--sucesso)"></div></div><div style="background:var(--bg2);border:1px solid var(--borda);border-radius:10px;padding:16px"><h3 style="font-size:14px;font-weight:600;margin-bottom:10px">👥 Cadastrados</h3><div class="tabela-wrap"><table><thead><tr><th>Nome</th><th>Usuário</th><th>Função</th><th>Ação</th></tr></thead><tbody>';
+  dados.forEach(function(u,i){var cor=u.funcao=='Administrador'?'style="background:#f3e8ff;color:#6b21a8"':u.funcao=='Financeiro'?'style="background:#dbeafe;color:#1e40af"':'class="badge-green"';h+='<tr><td>'+u.nome+'</td><td>'+u.usuario+'</td><td><span class="badge" '+cor+'>'+(u.funcao||'')+'</span></td><td>'+(i>0?'<button class="btn-icone" onclick="rmUser('+u.id+')">🗑️</button>':' —')+'</td></tr>'});
+  h+='</tbody></table></div></div>';document.getElementById('conteudo').innerHTML=h;
+}
+async function addUser(){var n=document.getElementById('cNome').value.trim(),u=document.getElementById('cUser').value.trim(),p=document.getElementById('cPass').value.trim(),f=document.getElementById('cFun').value;if(!n||!u||!p){document.getElementById('cMsg').textContent='Preencha todos';return}const{data:existe}=await sb.from('usuarios').select('*').eq('usuario',u).maybeSingle();if(existe){document.getElementById('cMsg').textContent='Usuário já existe';return}await sbInsert('usuarios',{nome:n,usuario:u,senha:p,funcao:f});document.getElementById('cMsg').textContent='Cadastrado!';document.getElementById('cNome').value='';document.getElementById('cUser').value='';document.getElementById('cPass').value='';renderConfig()}
+async function rmUser(id){if(!confirm('Remover?'))return;await sbDelete('usuarios',id);renderConfig()}
 
 document.addEventListener('DOMContentLoaded',function(){
   if(localStorage.getItem('tema')=='dark'){document.body.classList.add('dark');document.getElementById('btnTema').textContent='☀️'}
