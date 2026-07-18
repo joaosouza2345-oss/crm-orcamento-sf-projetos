@@ -179,7 +179,9 @@ tr:hover td{background:var(--bg3)}
 <div class="grupo"><label>Pago</label><select id="mpPago"><option>NÃO</option><option>SIM</option></select></div>
 </div>
 <div class="form-grid-3">
+<div class="grupo"><label>⚡ Potência (kWp)</label><input id="mpPotencia" placeholder="Ex: 5.5" oninput="calcPotenciaValor()" style="font-weight:600"></div>
 <div class="grupo"><label>Status</label><select id="mpStatus"><option>A Fazer</option><option>Em Andamento</option><option>Concluído</option><option>Cancelado</option></select></div>
+<div class="grupo" style="display:flex;align-items:end"><span id="mpPotenciaFeedback" style="font-size:12px;font-weight:600"></span></div>
 </div>
 <div style="margin-top:10px">
 <h3 style="font-size:13px;font-weight:600;margin-bottom:8px">📎 Documentos</h3>
@@ -360,7 +362,7 @@ async function pagProjetos(){
       var fotos=[];try{fotos=JSON.parse(p.fotos||'[]')}catch(e){}
       cards+='<div class="kanban-card" draggable="true" ondragstart="dragStartCard(event,'+p.id+')" ondragend="dragEndCard(event)" onclick="abrirModalProjById('+p.id+')">';
       cards+='<div class="kanban-card-title">'+p.cliente+'</div>';
-      cards+='<div class="kanban-card-info">'+(p.empresa||'—')+' | '+(p.data||'')+'</div>';
+      cards+='<div class="kanban-card-info">'+(p.empresa||'—')+' | '+(p.data||'')+(p.potencia?' | ⚡ '+p.potencia:'')+'</div>';
       if(!isEmp){cards+='<div class="kanban-card-valor">R$ '+fmtNum(parseMon(p.valor))+'</div>';cards+='<div class="kanban-card-sub">TRT: R$ '+fmtNum(parseMon(p.trt))+' '+(p.pago=='SIM'?'✅':'⏳')+'</div>'}
       cards+='<div class="kanban-card-anexos">'+(docs.length?'📎 '+docs.length+' doc(s)':'')+(fotos.length?(docs.length?' • ':'')+'📷 '+fotos.length+' foto(s)':'')+(!docs.length&&!fotos.length?'Sem anexos':'')+'</div>';
       cards+='</div>';
@@ -382,6 +384,22 @@ async function onEmpresaChange(){
   box.style.display='block';
   box.innerHTML='<strong>CNPJ:</strong> '+(e.cnpj||'—')+' &nbsp; <strong>Razão Social:</strong> '+(e.razao_social||'—')+'<br><strong>Endereço:</strong> '+(e.endereco||'—')+', '+(e.cidade||'')+'/'+(e.estado||'')+' &nbsp; <strong>CEP:</strong> '+(e.cep||'—')+'<br><strong>Telefone:</strong> '+(e.telefone||'—')+' &nbsp; <strong>E-mail:</strong> '+(e.email||'—');
 }
+function calcPotenciaValor(){
+  var isEmp=(usuarioAtual.funcao=='Empresa');
+  if(isEmp)return;
+  var potStr=document.getElementById('mpPotencia').value.trim();
+  if(!potStr)return;
+  var pot=parseFloat(potStr.replace(/[kKwWpP]/g,'').replace(',','.'))||0;
+  var valor='R$ 0,00',trt='R$ 70,00';
+  if(pot>0&&pot<=7.5){valor='R$ 370,00';trt='R$ 70,00'}
+  else if(pot>7.5&&pot<=20){valor='R$ 500,00';trt='R$ 70,00'}
+  else if(pot>20&&pot<=75){valor='R$ 900,00';trt='R$ 70,00'}
+  else if(pot>75){valor='R$ 900,00';trt='R$ 70,00'}
+  document.getElementById('mpValor').value=valor;
+  document.getElementById('mpTrt').value=trt;
+  var fb=document.getElementById('mpPotenciaFeedback');
+  if(fb){fb.textContent='→ Valor: '+valor+' | TRT: '+trt;fb.style.color='var(--sucesso)'}
+}
 async function abrirModalProj(p){
   var isEmp=(usuarioAtual.funcao=='Empresa');
   idxEditProjModal=p?p.id:null;
@@ -389,6 +407,7 @@ async function abrirModalProj(p){
   document.getElementById('mpCliente').value=p?p.cliente:'';
   document.getElementById('mpData').value=p?(p.data||hoje()):hoje();
   document.getElementById('mpStatus').value=p?(p.status||'A Fazer'):'A Fazer';
+  document.getElementById('mpPotencia').value=p?(p.potencia||''):'';
   var emps=await get('empresas');
   var sel=document.getElementById('mpEmpresa');sel.innerHTML='<option value="">Selecione...</option>';
   emps.forEach(function(e){sel.innerHTML+='<option value="'+e.id+'">'+(e.nome_fantasia||e.razao_social)+'</option>'});
@@ -416,6 +435,7 @@ async function abrirModalProj(p){
   document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value='';
   renderProjDocs();renderProjFotos();
   document.getElementById('mpMsg').textContent='';document.getElementById('mpMsg').style.color='';
+  document.getElementById('mpPotenciaFeedback').textContent='';
   document.getElementById('modalProjeto').classList.add('show');
   document.getElementById('mpDocInput').onchange=function(e){addProjDocs(e.target.files)};
   document.getElementById('mpFotoInput').onchange=function(e){addProjFotos(e.target.files)};
@@ -434,7 +454,8 @@ async function salvarModalProj(){
   var empSel=document.getElementById('mpEmpresa');var empId=null,empNome='';
   if(empSel.value){if(String(empSel.value).indexOf('manual_')===0){empNome=String(empSel.value).replace('manual_','');empId=null}else{empId=parseInt(empSel.value)||null;empNome=empSel.selectedIndex>0?(empSel.options[empSel.selectedIndex].text):''}}
   if(isEmp&&!empNome){empNome=usuarioAtual.empresa||''}
-  var dados={cliente:cl,empresa:empNome,empresa_id:empId,data:document.getElementById('mpData').value.trim()||hoje(),status:document.getElementById('mpStatus').value};
+  var potVal=document.getElementById('mpPotencia').value.trim();
+  var dados={cliente:cl,empresa:empNome,empresa_id:empId,data:document.getElementById('mpData').value.trim()||hoje(),status:document.getElementById('mpStatus').value,potencia:potVal};
   if(isEmp){if(idxEditProjModal){var ps=await get('projetos');var orig=ps.find(function(x){return x.id==idxEditProjModal});if(orig){dados.valor=orig.valor;dados.trt=orig.trt;dados.pago=orig.pago}}else{dados.valor='R$ 0,00';dados.trt='R$ 0,00';dados.pago='NÃO'}}
   else{dados.valor=document.getElementById('mpValor').value.trim()||'R$ 0,00';dados.trt=document.getElementById('mpTrt').value.trim()||'R$ 0,00';dados.pago=document.getElementById('mpPago').value}
   var msg=document.getElementById('mpMsg');msg.style.color='var(--aviso)';msg.textContent='Salvando...';
@@ -447,7 +468,7 @@ async function salvarModalProj(){
   else{msg.style.color='var(--perigo)';msg.textContent='❌ Erro ao salvar. Abra o console (F12).'}
 }
 async function excluirModalProj(){if(!idxEditProjModal)return;if(!confirm('Excluir este projeto?'))return;await del('projetos',idxEditProjModal);fecharModalProj();pagProjetos()}
-function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='A Fazer';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
+function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='A Fazer';document.getElementById('mpPotencia').value='';document.getElementById('mpPotenciaFeedback').textContent='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='R$ 70,00';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
 
 // ORÇAMENTOS
 async function pagOrcamentos(){ORC_HIST=await get('orcamentos');document.getElementById('conteudo').innerHTML='<div class="titulo-pag">📋 Orçamentos</div><div class="orc-tema" style="background:#0f1724;border-radius:12px;padding:20px"><div class="orc-nav"><span class="ativo" onclick="navOrc(\'criar\')">💰 Criar</span><span onclick="navOrc(\'hist\')">📜 Histórico</span></div><div id="orcBody">'+htmlCriarOrc()+'</div></div>';setTimeout(function(){document.getElementById('orcId').value=gerarOrcId();carregarSelOrc()},100)}
