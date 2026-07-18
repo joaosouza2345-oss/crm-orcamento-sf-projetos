@@ -224,7 +224,6 @@ var idxVender=null,idxEditLead=null,idEditEstq=null,usuarioAtual=null;
 var cache={};
 var projDocs=[],projFotos=[],idxEditProjModal=null;
 var idxEditEmp=null,draggedProjectId=null;
-var calcValorProj='',calcTrtProj='';
 var STATUS_LIST=['A Fazer','Em Andamento','Concluído','Cancelado'];
 var STATUS_CORES={'A Fazer':'#3b82f6','Em Andamento':'#f59e0b','Concluído':'#22c55e','Cancelado':'#ef4444'};
 var STATUS_ICONES={'A Fazer':'📋','Em Andamento':'⚡','Concluído':'✅','Cancelado':'❌'};
@@ -235,6 +234,18 @@ function hoje(){var d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+
 function meses(){return['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']}
 function altTema(){document.body.classList.toggle('dark');document.getElementById('btnTema').textContent=document.body.classList.contains('dark')?'☀️':'🌙';localStorage.setItem('tema',document.body.classList.contains('dark')?'dark':'light')}
 function limparCache(){cache={}}
+
+// === FUNÇÃO CENTRAL DE CÁLCULO POR POTÊNCIA ===
+function calcularValorPorPotencia(potStr){
+  if(!potStr)return{valor:'R$ 0,00',trt:'R$ 70,00'};
+  var pot=parseFloat(String(potStr).replace(/[kKwWpP]/g,'').replace(',','.'))||0;
+  var valor='R$ 0,00',trt='R$ 70,00';
+  if(pot>0&&pot<=7.5){valor='R$ 370,00';trt='R$ 70,00'}
+  else if(pot>7.5&&pot<=20){valor='R$ 500,00';trt='R$ 70,00'}
+  else if(pot>20&&pot<=75){valor='R$ 900,00';trt='R$ 70,00'}
+  else if(pot>75){valor='R$ 900,00';trt='R$ 70,00'}
+  return{valor:valor,trt:trt}
+}
 
 async function get(t){try{if(cache[t])return cache[t];const{data,error}=await sb.from(t).select('*').order('id',{ascending:false});if(error)console.error('GET '+t+':',error.message);cache[t]=data||[];return cache[t]}catch(e){console.error(e);return[]}}
 async function ins(t,d){try{cache[t]=null;const{data,error}=await sb.from(t).insert(d).select();if(error){console.error('INS '+t+':',error.message);return null}return data}catch(e){console.error('INS '+t+':',e);return null}}
@@ -385,23 +396,18 @@ async function onEmpresaChange(){
   box.style.display='block';
   box.innerHTML='<strong>CNPJ:</strong> '+(e.cnpj||'—')+' &nbsp; <strong>Razão Social:</strong> '+(e.razao_social||'—')+'<br><strong>Endereço:</strong> '+(e.endereco||'—')+', '+(e.cidade||'')+'/'+(e.estado||'')+' &nbsp; <strong>CEP:</strong> '+(e.cep||'—')+'<br><strong>Telefone:</strong> '+(e.telefone||'—')+' &nbsp; <strong>E-mail:</strong> '+(e.email||'—');
 }
+
+// === CÁLCULO DE POTÊNCIA (atualiza DOM + feedback) ===
 function calcPotenciaValor(){
   var potStr=document.getElementById('mpPotencia').value.trim();
-  if(!potStr){calcValorProj='';calcTrtProj='';var fb=document.getElementById('mpPotenciaFeedback');if(fb)fb.textContent='';return}
-  var pot=parseFloat(potStr.replace(/[kKwWpP]/g,'').replace(',','.'))||0;
-  var valor='R$ 0,00',trt='R$ 70,00';
-  if(pot>0&&pot<=7.5){valor='R$ 370,00';trt='R$ 70,00'}
-  else if(pot>7.5&&pot<=20){valor='R$ 500,00';trt='R$ 70,00'}
-  else if(pot>20&&pot<=75){valor='R$ 900,00';trt='R$ 70,00'}
-  else if(pot>75){valor='R$ 900,00';trt='R$ 70,00'}
-  calcValorProj=valor;
-  calcTrtProj=trt;
-  var isEmp=(usuarioAtual.funcao=='Empresa');
-  if(document.getElementById('mpValor'))document.getElementById('mpValor').value=valor;
-  if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value=trt;
   var fb=document.getElementById('mpPotenciaFeedback');
-  if(fb){fb.textContent='→ Valor: '+valor+' | TRT: '+trt;fb.style.color='var(--sucesso)'}
+  if(!potStr){if(fb)fb.textContent='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='';return}
+  var r=calcularValorPorPotencia(potStr);
+  if(document.getElementById('mpValor'))document.getElementById('mpValor').value=r.valor;
+  if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value=r.trt;
+  if(fb){fb.textContent='→ Valor: '+r.valor+' | TRT: '+r.trt;fb.style.color='var(--sucesso)'}
 }
+
 async function abrirModalProj(p){
   var isEmp=(usuarioAtual.funcao=='Empresa');
   idxEditProjModal=p?p.id:null;
@@ -410,7 +416,6 @@ async function abrirModalProj(p){
   document.getElementById('mpData').value=p?(p.data||hoje()):hoje();
   document.getElementById('mpStatus').value=p?(p.status||'A Fazer'):'A Fazer';
   document.getElementById('mpPotencia').value=p?(p.potencia||''):'';
-  calcValorProj=p?p.valor:'';calcTrtProj=p?(p.trt||''):'';
   var emps=await get('empresas');
   var sel=document.getElementById('mpEmpresa');sel.innerHTML='<option value="">Selecione...</option>';
   emps.forEach(function(e){sel.innerHTML+='<option value="'+e.id+'">'+(e.nome_fantasia||e.razao_social)+'</option>'});
@@ -431,6 +436,8 @@ async function abrirModalProj(p){
     document.getElementById('mpPago').value=p?(p.pago||'NÃO'):'NÃO';
     document.getElementById('mpPago').disabled=false;
   }
+  // === CHAMAR calcPotenciaValor AO ABRIR (para projetos existentes) ===
+  if(p&&p.potencia){calcPotenciaValor()}
   projDocs=[];projFotos=[];
   if(p&&p.documentos){try{projDocs=JSON.parse(p.documentos)}catch(e){projDocs=[]}}
   if(p&&p.fotos){try{projFotos=JSON.parse(p.fotos)}catch(e){projFotos=[]}}
@@ -450,6 +457,8 @@ function addProjDocs(files){for(var i=0;i<files.length;i++){(function(f){if(f.si
 function addProjFotos(files){for(var i=0;i<files.length;i++){(function(f){if(f.size>3*1024*1024){alert('Foto '+f.name+' muito grande (máx 3MB)');return}var reader=new FileReader();reader.onload=function(e){projFotos.push({nome:f.name,tipo:f.type,data:e.target.result});renderProjFotos()};reader.readAsDataURL(f)})(files[i])}}
 function remProjDoc(i){projDocs.splice(i,1);renderProjDocs()}
 function remProjFoto(i){projFotos.splice(i,1);renderProjFotos()}
+
+// === SALVAR PROJETO (calcula valor diretamente da potência) ===
 async function salvarModalProj(){
   var isEmp=(usuarioAtual.funcao=='Empresa');
   var cl=document.getElementById('mpCliente').value.trim();
@@ -459,22 +468,29 @@ async function salvarModalProj(){
   if(isEmp&&!empNome){empNome=usuarioAtual.empresa||''}
   var potVal=document.getElementById('mpPotencia').value.trim();
   var dados={cliente:cl,empresa:empNome,empresa_id:empId,data:document.getElementById('mpData').value.trim()||hoje(),status:document.getElementById('mpStatus').value,potencia:potVal};
-  if(isEmp){
-    if(idxEditProjModal){
-      var ps=await get('projetos');var orig=ps.find(function(x){return x.id==idxEditProjModal});
-      if(orig){
-        if(potVal){dados.valor=calcValorProj||orig.valor;dados.trt=calcTrtProj||orig.trt}
-        else{dados.valor=orig.valor;dados.trt=orig.trt}
-        dados.pago=orig.pago;
-      }
-    }else{
-      dados.valor=calcValorProj||'R$ 0,00';
-      dados.trt=calcTrtProj||'R$ 0,00';
-      dados.pago='NÃO';
-    }
+  // === CALCULAR VALOR E TRT DIRETAMENTE DA POTÊNCIA ===
+  if(potVal){
+    var calc=calcularValorPorPotencia(potVal);
+    dados.valor=calc.valor;
+    dados.trt=calc.trt;
   }else{
-    dados.valor=document.getElementById('mpValor').value.trim()||'R$ 0,00';
-    dados.trt=document.getElementById('mpTrt').value.trim()||'R$ 0,00';
+    if(isEmp){
+      if(idxEditProjModal){var ps=await get('projetos');var orig=ps.find(function(x){return x.id==idxEditProjModal});if(orig){dados.valor=orig.valor;dados.trt=orig.trt;dados.pago=orig.pago}else{dados.valor='R$ 0,00';dados.trt='R$ 0,00';dados.pago='NÃO'}}
+      else{dados.valor='R$ 0,00';dados.trt='R$ 0,00';dados.pago='NÃO'}
+    }else{
+      dados.valor=document.getElementById('mpValor').value.trim()||'R$ 0,00';
+      dados.trt=document.getElementById('mpTrt').value.trim()||'R$ 0,00';
+      dados.pago=document.getElementById('mpPago').value;
+    }
+  }
+  // Se não é Empresa e tem potência, ainda deixar editar valor manualmente? Não, potência sobrescreve.
+  // Mas se é Empresa e tem potência, já está calculado acima.
+  // Se é Admin e tem potência, o calcPotenciaValor já preencheu os campos, mas garantimos com o cálculo direto.
+  if(!isEmp&&potVal){
+    // Admin com potência: usar valores calculados mas permitir que pago venha do campo
+    dados.pago=document.getElementById('mpPago').value;
+  }
+  if(!potVal&&!isEmp){
     dados.pago=document.getElementById('mpPago').value;
   }
   var msg=document.getElementById('mpMsg');msg.style.color='var(--aviso)';msg.textContent='Salvando...';
@@ -487,7 +503,7 @@ async function salvarModalProj(){
   else{msg.style.color='var(--perigo)';msg.textContent='❌ Erro ao salvar. Abra o console (F12).'}
 }
 async function excluirModalProj(){if(!idxEditProjModal)return;if(!confirm('Excluir este projeto?'))return;await del('projetos',idxEditProjModal);fecharModalProj();pagProjetos()}
-function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='A Fazer';document.getElementById('mpPotencia').value='';document.getElementById('mpPotenciaFeedback').textContent='';calcValorProj='';calcTrtProj='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='R$ 70,00';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
+function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='A Fazer';document.getElementById('mpPotencia').value='';document.getElementById('mpPotenciaFeedback').textContent='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='R$ 70,00';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
 
 // ORÇAMENTOS
 async function pagOrcamentos(){ORC_HIST=await get('orcamentos');document.getElementById('conteudo').innerHTML='<div class="titulo-pag">📋 Orçamentos</div><div class="orc-tema" style="background:#0f1724;border-radius:12px;padding:20px"><div class="orc-nav"><span class="ativo" onclick="navOrc(\'criar\')">💰 Criar</span><span onclick="navOrc(\'hist\')">📜 Histórico</span></div><div id="orcBody">'+htmlCriarOrc()+'</div></div>';setTimeout(function(){document.getElementById('orcId').value=gerarOrcId();carregarSelOrc()},100)}
