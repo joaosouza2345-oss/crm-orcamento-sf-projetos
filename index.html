@@ -115,7 +115,6 @@ tr:hover td{background:var(--bg3)}
 .filtro-bar .grupo{min-width:120px}
 .filtro-bar input,.filtro-bar select{padding:6px 10px;border:1px solid var(--input-border);border-radius:5px;background:var(--input-bg);color:var(--text);font-size:13px;outline:none}
 .filtro-bar input:focus,.filtro-bar select:focus{border-color:var(--primaria)}
-/* DASHBOARD PRO */
 .dash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
 .dash-header h1{font-size:24px;font-weight:800}
 .dash-header .sub{font-size:13px;color:var(--text2);margin-top:2px}
@@ -164,7 +163,6 @@ tr:hover td{background:var(--bg3)}
 .cat-bar-row .cat-info .cat-val{color:var(--text2)}
 .cat-bar{height:6px;border-radius:3px;background:var(--bg3);overflow:hidden}
 .cat-bar-fill{height:100%;border-radius:3px;transition:width .5s}
-.cat-link{font-size:12px;color:var(--primaria);cursor:pointer;margin-top:8px;display:inline-block}
 .donut-center{position:relative;display:flex;align-items:center;justify-content:center}
 .donut-center .donut-total{position:absolute;text-align:center}
 .donut-center .donut-total .val{font-size:22px;font-weight:800}
@@ -237,7 +235,7 @@ tr:hover td{background:var(--bg3)}
 </div>
 <div class="form-grid-3">
 <div class="grupo"><label>⚡ Potência (kWp)</label><input id="mpPotencia" placeholder="Ex: 5.5" oninput="calcPotenciaValor()" style="font-weight:600"></div>
-<div class="grupo"><label>Status</label><select id="mpStatus"><option>A Fazer</option><option>Em Andamento</option><option>Concluído</option><option>Cancelado</option></select></div>
+<div class="grupo"><label>Status</label><select id="mpStatus"></select></div>
 <div class="grupo" style="display:flex;align-items:end"><span id="mpPotenciaFeedback" style="font-size:12px;font-weight:600"></span></div>
 </div>
 <div style="margin-top:10px">
@@ -272,6 +270,20 @@ tr:hover td{background:var(--bg3)}
 </div>
 <button class="btn btn-primary" onclick="salvarModalEmp()">Salvar</button>
 </div></div>
+<div class="modal-overlay" id="modalFases"><div class="modal" style="width:580px">
+<button class="flut-direita" onclick="fecharModalFases()">✕</button>
+<h2>⚙️ Fases do Kanban</h2>
+<p style="font-size:13px;color:var(--text2);margin-bottom:14px">Adicione, edite ou remova as colunas do quadro de projetos.</p>
+<div id="fasesList" style="margin-bottom:14px"></div>
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<input id="novaFaseNome" placeholder="Nome da fase..." style="flex:1;padding:8px;border:1px solid var(--input-border);border-radius:5px;background:var(--input-bg);color:var(--text)">
+<input type="color" id="novaFaseCor" value="#3b82f6" style="width:36px;height:36px;border:1px solid var(--input-border);border-radius:5px;cursor:pointer;background:transparent">
+<input id="novaFaseIcone" placeholder="📋" style="width:50px;padding:8px;border:1px solid var(--input-border);border-radius:5px;background:var(--input-bg);color:var(--text);text-align:center">
+<button class="btn btn-success" onclick="addFase()">+ Adicionar</button>
+</div>
+<button class="btn btn-primary" onclick="salvarEFechaFases()">💾 Salvar Fases</button>
+<div id="faseMsg" style="margin-top:6px;font-size:13px"></div>
+</div></div>
 <script>
 var sb=supabase.createClient('https://zzcenbzqlzibrqnjooia.supabase.co','sb_publishable_mH9pJzsKhc2g0qwp2AW8PQ_8hrT-cW1');
 var ORC_ITENS=[],ORC_HIST=[],ultimoGrafico=null,abaToggle='leads',subLead='status',subProj='empresa';
@@ -279,9 +291,31 @@ var idxVender=null,idxEditLead=null,idEditEstq=null,usuarioAtual=null;
 var cache={};
 var projDocs=[],projFotos=[],idxEditProjModal=null;
 var idxEditEmp=null,draggedProjectId=null;
-var STATUS_LIST=['A Fazer','Em Andamento','Concluído','Cancelado'];
-var STATUS_CORES={'A Fazer':'#3b82f6','Em Andamento':'#f59e0b','Concluído':'#22c55e','Cancelado':'#ef4444'};
-var STATUS_ICONES={'A Fazer':'📋','Em Andamento':'⚡','Concluído':'✅','Cancelado':'❌'};
+var KANBAN_FASES=[
+  {nome:'A Fazer',cor:'#3b82f6',icone:'📋'},
+  {nome:'Em Andamento',cor:'#f59e0b',icone:'⚡'},
+  {nome:'Concluído',cor:'#22c55e',icone:'✅'},
+  {nome:'Cancelado',cor:'#ef4444',icone:'❌'}
+];
+var STATUS_LIST=[],STATUS_CORES={},STATUS_ICONES={};
+function syncStatusVars(){
+  STATUS_LIST=KANBAN_FASES.map(function(f){return f.nome});
+  STATUS_CORES={};STATUS_ICONES={};
+  KANBAN_FASES.forEach(function(f){STATUS_CORES[f.nome]=f.cor;STATUS_ICONES[f.nome]=f.icone});
+}
+syncStatusVars();
+async function carregarFases(){
+  try{var{data,error}=await sb.from('fases').select('*').order('ordem',{ascending:true});
+    if(!error&&data&&data.length){KANBAN_FASES=data.map(function(f){return{nome:f.nome,cor:f.cor,icone:f.icone,id:f.id}})}
+    else{var ls=localStorage.getItem('kanban_fases');if(ls)KANBAN_FASES=JSON.parse(ls)}
+  }catch(e){var ls2=localStorage.getItem('kanban_fases');if(ls2)KANBAN_FASES=JSON.parse(ls2)}
+  syncStatusVars();
+}
+async function salvarFases(){
+  try{await sb.from('fases').delete().neq('id',0);
+    for(var i=0;i<KANBAN_FASES.length;i++){await sb.from('fases').insert({nome:KANBAN_FASES[i].nome,cor:KANBAN_FASES[i].cor,icone:KANBAN_FASES[i].icone,ordem:i})}
+  }catch(e){localStorage.setItem('kanban_fases',JSON.stringify(KANBAN_FASES))}
+}
 var _allLeads=[],_allVendas=[],_allGastos=[],_allEstoque=[],_allProjetos=[],_allOrcamentos=[];
 function fmtNum(v){return(Number(v)||0).toFixed(2).replace('.',',')}
 function parseMon(s){if(!s)return 0;return parseFloat(String(s).replace(/[R$\s.]/g,'').replace(',','.'))||0}
@@ -569,7 +603,7 @@ function renderToggleChart(){
   else if(abaToggle=='vendas'){var m={};V.forEach(function(v){m[v.empresa]=(m[v.empresa]||0)+1});labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length)}
   else if(abaToggle=='projetos'){
     if(subProj=='empresa'){var m={};P.forEach(function(p){m[p.empresa||'Sem']=(m[p.empresa||'Sem']||0)+1});labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length)}
-    else if(subProj=='status'){STATUS_LIST.forEach(function(s){labels.push(s);data.push(P.filter(function(p){return(p.status||'A Fazer')==s}).length);cores.push(STATUS_CORES[s])})}
+    else if(subProj=='status'){STATUS_LIST.forEach(function(s){labels.push(s);data.push(P.filter(function(p){return(p.status||'A Fazer')==s}).length);cores.push(STATUS_CORES[s]||'#999')})}
   }
   else if(abaToggle=='orcamentos'){var m={};O.forEach(function(o){m[o.status]=(m[o.status]||0)+1});labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length)}
   if(!labels.length){labels=['Sem'];data=[0];cores=['#555']}
@@ -765,10 +799,11 @@ async function editEmp(id){var d=await get('empresas');var e=d.find(function(x){
 async function delEmp(id){if(!confirm('Excluir esta empresa?'))return;await del('empresas',id);pagEmpresas()}
 // PROJETOS (KANBAN)
 async function pagProjetos(){
+  await carregarFases();
   var isEmp=(usuarioAtual.funcao=='Empresa');
   var m=document.getElementById('conteudo');
   var filtrosHtml=isEmp?'':'<div class="filtro-bar"><div class="grupo"><label>Empresa</label><select id="fProjEmp" onchange="filtrarProjetos()"><option value="">Todas</option></select></div><button class="btn btn-outline" onclick="limparFiltrosProjetos()">Limpar</button></div>';
-  m.innerHTML='<div class="titulo-pag">🔬 Projetos</div><div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" onclick="abrirModalProj()">+ Novo Projeto</button>'+(isEmp?'':'<button class="btn btn-success" onclick="abrirModalPDF()">📄 Exportar PDF</button>')+'</div>'+filtrosHtml+'<div id="kanbanBoard" class="kanban-board"></div>';
+  m.innerHTML='<div class="titulo-pag">🔬 Projetos</div><div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" onclick="abrirModalProj()">+ Novo Projeto</button><button class="btn btn-outline" onclick="abrirModalFases()">⚙️ Fases</button>'+(isEmp?'':'<button class="btn btn-success" onclick="abrirModalPDF()">📄 Exportar PDF</button>')+'</div>'+filtrosHtml+'<div id="kanbanBoard" class="kanban-board"></div>';
   var d=await get('projetos');_allProjetos=d;
   if(isEmp){var empTxt=(usuarioAtual.empresa||'').toLowerCase();d=d.filter(function(p){return(p.empresa||'').toLowerCase()==empTxt||(p.empresa||'').toLowerCase().includes(empTxt)||empTxt.includes((p.empresa||'').toLowerCase())})}
   window._P=d;window._PROJETOS_CACHE=d;
@@ -786,11 +821,12 @@ function filtrarProjetos(){
 function renderizarKanban(d){
   var isEmp=(usuarioAtual.funcao=='Empresa');
   var board=document.getElementById('kanbanBoard');if(!board)return;board.innerHTML='';
-  STATUS_LIST.forEach(function(st){
-    var projs=d.filter(function(p){return(p.status||'A Fazer')==st});
+  KANBAN_FASES.forEach(function(st){
+    var stNome=st.nome;
+    var projs=d.filter(function(p){return(p.status||'A Fazer')==stNome});
     var col=document.createElement('div');col.className='kanban-col';
-    col.ondragover=function(ev){ev.preventDefault()};col.ondrop=function(ev){ev.preventDefault();dropOnCol(ev,st)};
-    var hdr='<div class="kanban-col-header"><span class="kanban-col-title"><span class="kanban-col-dot" style="background:'+STATUS_CORES[st]+'"></span>'+STATUS_ICONES[st]+' '+st+'</span><span class="kanban-col-count">'+projs.length+'</span></div>';
+    col.ondragover=function(ev){ev.preventDefault()};col.ondrop=function(ev){ev.preventDefault();dropOnCol(ev,stNome)};
+    var hdr='<div class="kanban-col-header"><span class="kanban-col-title"><span class="kanban-col-dot" style="background:'+(STATUS_CORES[stNome]||st.cor)+'"></span>'+(STATUS_ICONES[stNome]||st.icone)+' '+stNome+'</span><span class="kanban-col-count">'+projs.length+'</span></div>';
     var cards='<div class="kanban-cards">';
     projs.forEach(function(p){
       var docs=[];try{docs=JSON.parse(p.documentos||'[]')}catch(e){}
@@ -806,6 +842,37 @@ function renderizarKanban(d){
     cards+='</div>';col.innerHTML=hdr+cards;board.appendChild(col);
   });
 }
+// FASES KANBAN
+function abrirModalFases(){renderFasesList();document.getElementById('modalFases').classList.add('show')}
+function fecharModalFases(){document.getElementById('modalFases').classList.remove('show')}
+function renderFasesList(){
+  var c=document.getElementById('fasesList');c.innerHTML='';
+  KANBAN_FASES.forEach(function(f,i){
+    var div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:8px;background:var(--bg3);padding:10px;border-radius:8px;margin-bottom:6px';
+    div.innerHTML='<span style="width:24px;text-align:center;font-size:18px">'+f.icone+'</span>'+
+      '<input value="'+f.nome+'" onchange="editFaseNome('+i+',this.value)" style="flex:1;padding:6px 8px;border:1px solid var(--input-border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px">'+
+      '<input type="color" value="'+f.cor+'" onchange="editFaseCor('+i+',this.value)" style="width:36px;height:32px;border:1px solid var(--input-border);border-radius:4px;cursor:pointer;background:transparent">'+
+      '<button onclick="moverFase('+i+',-1)" '+(i==0?'disabled':'')+' style="background:none;border:1px solid var(--borda);border-radius:4px;cursor:pointer;padding:4px 8px;font-size:12px;color:var(--text2);opacity:'+(i==0?'.4':'1')+'">↑</button>'+
+      '<button onclick="moverFase('+i+',1)" '+(i==KANBAN_FASES.length-1?'disabled':'')+' style="background:none;border:1px solid var(--borda);border-radius:4px;cursor:pointer;padding:4px 8px;font-size:12px;color:var(--text2);opacity:'+(i==KANBAN_FASES.length-1?'.4':'1')+'">↓</button>'+
+      '<button onclick="delFase('+i+')" style="background:none;border:none;cursor:pointer;color:var(--perigo);font-size:16px">🗑️</button>';
+    c.appendChild(div);
+  });
+}
+function addFase(){
+  var nome=document.getElementById('novaFaseNome').value.trim();
+  if(!nome){document.getElementById('faseMsg').textContent='Informe o nome';return}
+  var cor=document.getElementById('novaFaseCor').value;
+  var icone=document.getElementById('novaFaseIcone').value.trim()||'📋';
+  KANBAN_FASES.push({nome:nome,cor:cor,icone:icone});
+  document.getElementById('novaFaseNome').value='';document.getElementById('novaFaseIcone').value='';
+  renderFasesList();document.getElementById('faseMsg').textContent='';
+}
+function editFaseNome(i,v){KANBAN_FASES[i].nome=v}
+function editFaseCor(i,v){KANBAN_FASES[i].cor=v}
+function moverFase(i,dir){var j=i+dir;if(j<0||j>=KANBAN_FASES.length)return;var tmp=KANBAN_FASES[i];KANBAN_FASES[i]=KANBAN_FASES[j];KANBAN_FASES[j]=tmp;renderFasesList()}
+function delFase(i){if(!confirm('Remover "'+KANBAN_FASES[i].nome+'"? Projetos nesta fase ficarão sem coluna.'))return;KANBAN_FASES.splice(i,1);renderFasesList()}
+async function salvarEFechaFases(){syncStatusVars();await salvarFases();document.getElementById('faseMsg').style.color='var(--sucesso)';document.getElementById('faseMsg').textContent='✅ Fases salvas!';setTimeout(function(){fecharModalFases();pagProjetos()},600)}
 function abrirModalProjById(id){var p=(window._PROJETOS_CACHE||[]).find(function(x){return x.id==id});if(p)abrirModalProj(p)}
 function dragStartCard(ev,id){draggedProjectId=id;ev.dataTransfer.effectAllowed='move';ev.target.classList.add('dragging')}
 function dragEndCard(ev){ev.target.classList.remove('dragging')}
@@ -835,7 +902,9 @@ async function abrirModalProj(p){
   document.getElementById('tituloModalProj').textContent=p?'✏️ Editar Projeto':'📝 Novo Projeto';
   document.getElementById('mpCliente').value=p?p.cliente:'';
   document.getElementById('mpData').value=p?(p.data||hoje()):hoje();
-  document.getElementById('mpStatus').value=p?(p.status||'A Fazer'):'A Fazer';
+  var selSt=document.getElementById('mpStatus');selSt.innerHTML='';
+  KANBAN_FASES.forEach(function(f){selSt.innerHTML+='<option value="'+f.nome+'">'+f.icone+' '+f.nome+'</option>'});
+  selSt.value=p?(p.status||'A Fazer'):'A Fazer';
   document.getElementById('mpPotencia').value=p?(p.potencia||''):'';
   var emps=await get('empresas');
   var sel=document.getElementById('mpEmpresa');sel.innerHTML='<option value="">Selecione...</option>';
