@@ -130,7 +130,6 @@ tr:hover td{background:var(--bg3)}
 <div id="app">
 <div class="topo"><div class="topo-esq"><div class="logo">SF</div><h2>CRM SF Projetos Elétricos</h2></div><div class="topo-dir"><span id="userInfo" style="color:var(--header-txt);font-size:12px;margin-right:8px"></span><button class="topo-btn" onclick="altTema()" id="btnTema">🌙</button><button class="topo-btn" onclick="sair()">Sair</button></div></div>
 <div class="layout"><div class="sidebar" id="sidebar"></div><div class="conteudo" id="conteudo"></div></div></div>
-
 <div class="modal-overlay" id="modalLead"><div class="modal">
 <button class="flut-direita" onclick="fecharModalLead()">✕</button><h2 id="tituloModalLead">Novo Lead</h2>
 <div class="form-grid">
@@ -140,12 +139,10 @@ tr:hover td{background:var(--bg3)}
 <div class="grupo" style="grid-column:1/3"><label>Link do Orçamento (pasta)</label><input id="fLeadLink" placeholder="https://drive.google.com/..." style="width:100%"></div>
 <div class="grupo" style="grid-column:1/3"><label>Obs</label><input id="fLeadObs"></div></div>
 <button class="btn btn-primary" onclick="salvarLeadModal()">Salvar</button></div></div>
-
 <div class="modal-overlay" id="modalGasto"><div class="modal">
 <button class="flut-direita" onclick="fecharModalGasto()">✕</button><h2>Nova Venda</h2><p id="infoGasto"></p>
 <div class="form-grid"><div class="grupo"><label>Valor</label><input id="gastoValor"></div><div class="grupo"><label>Gasto</label><input id="gastoGasto"></div><div class="grupo"><label>Empresa</label><select id="gastoEmpresa"><option>SF</option><option>SPAZZIO</option><option>BRANCO</option><option>ÉTHOS</option><option>SOLAR FORCE</option><option>TAQUARI</option></select></div><div class="grupo"><label>Potência</label><input id="gastoPotencia"></div></div>
 <button class="btn btn-success" onclick="confirmarVenda()">Confirmar</button></div></div>
-
 <div class="modal-overlay" id="modalEstoque"><div class="modal">
 <button class="flut-direita" onclick="fecharModalEstoque()">✕</button><h2 id="tituloEstoque">Novo Item</h2>
 <div class="form-grid">
@@ -154,7 +151,6 @@ tr:hover td{background:var(--bg3)}
 <div class="grupo"><label>Qtd</label><input type="number" id="estqQtd"></div><div class="grupo"><label>Fornecedor</label><input id="estqFornec"></div>
 <div class="grupo"><label>Vlr Pago</label><input type="number" id="estqPago"></div><div class="grupo"><label>Vlr Venda</label><input type="number" id="estqVenda"></div></div>
 <button class="btn btn-primary" onclick="salvarEstoque()">Salvar</button></div></div>
-
 <div class="modal-overlay" id="modalPDF"><div class="modal">
 <button class="flut-direita" onclick="fecharModalPDF()">✕</button><h2>Exportar Projetos em PDF</h2>
 <div class="form-grid">
@@ -167,7 +163,6 @@ tr:hover td{background:var(--bg3)}
 <label><input type="checkbox" id="pcCliente" checked>Cliente</label><label><input type="checkbox" id="pcEmpresa" checked>Empresa</label><label><input type="checkbox" id="pcData" checked>Data</label>
 <label><input type="checkbox" id="pcValor" checked>Valor</label><label><input type="checkbox" id="pcTRT" checked>TRT</label><label><input type="checkbox" id="pcPago" checked>Pago</label></div>
 <button class="btn btn-success" onclick="gerarPDF()">Gerar PDF</button></div></div>
-
 <div class="modal-overlay" id="modalProjeto"><div class="modal" style="width:640px">
 <button class="flut-direita" onclick="fecharModalProj()">✕</button>
 <h2 id="tituloModalProj">Novo Projeto</h2>
@@ -204,7 +199,6 @@ tr:hover td{background:var(--bg3)}
 </div>
 <div id="mpMsg" style="margin-top:6px;font-size:13px"></div>
 </div></div>
-
 <div class="modal-overlay" id="modalEmpresa"><div class="modal">
 <button class="flut-direita" onclick="fecharModalEmp()">✕</button><h2 id="tituloModalEmp">Nova Empresa</h2>
 <div class="form-grid">
@@ -220,7 +214,6 @@ tr:hover td{background:var(--bg3)}
 </div>
 <button class="btn btn-primary" onclick="salvarModalEmp()">Salvar</button>
 </div></div>
-
 <script>
 var sb=supabase.createClient('https://zzcenbzqlzibrqnjooia.supabase.co','sb_publishable_mH9pJzsKhc2g0qwp2AW8PQ_8hrT-cW1');
 var ORC_ITENS=[],ORC_HIST=[],ultimoGrafico=null,abaToggle='leads',subLead='status',subProj='empresa';
@@ -232,7 +225,6 @@ var STATUS_LIST=['A Fazer','Em Andamento','Concluído','Cancelado'];
 var STATUS_CORES={'A Fazer':'#3b82f6','Em Andamento':'#f59e0b','Concluído':'#22c55e','Cancelado':'#ef4444'};
 var STATUS_ICONES={'A Fazer':'📋','Em Andamento':'⚡','Concluído':'✅','Cancelado':'❌'};
 var _allLeads=[],_allVendas=[],_allGastos=[],_allEstoque=[],_allProjetos=[],_allOrcamentos=[];
-
 function fmtNum(v){return(Number(v)||0).toFixed(2).replace('.',',')}
 function parseMon(s){if(!s)return 0;return parseFloat(String(s).replace(/[R$\s.]/g,'').replace(',','.'))||0}
 function hoje(){var d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
@@ -240,7 +232,6 @@ function meses(){return['Janeiro','Fevereiro','Março','Abril','Maio','Junho','J
 function mesesCurto(){return['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']}
 function altTema(){document.body.classList.toggle('dark');document.getElementById('btnTema').textContent=document.body.classList.contains('dark')?'☀️':'🌙';localStorage.setItem('tema',document.body.classList.contains('dark')?'dark':'light')}
 function limparCache(){cache={}}
-
 function calcularValorPorPotencia(potStr){
   if(!potStr)return{valor:'R$ 0,00',trt:'R$ 70,00'};
   var pot=parseFloat(String(potStr).replace(/[kKwWpP]/g,'').replace(',','.'))||0;
@@ -251,12 +242,10 @@ function calcularValorPorPotencia(potStr){
   else if(pot>75){valor='R$ 900,00';trt='R$ 70,00'}
   return{valor:valor,trt:trt}
 }
-
 async function get(t){try{if(cache[t])return cache[t];const{data,error}=await sb.from(t).select('*').order('id',{ascending:false});if(error)console.error('GET '+t+':',error.message);cache[t]=data||[];return cache[t]}catch(e){console.error(e);return[]}}
 async function ins(t,d){try{cache[t]=null;const{data,error}=await sb.from(t).insert(d).select();if(error){console.error('INS '+t+':',error.message);return null}return data}catch(e){console.error('INS '+t+':',e);return null}}
 async function upd(t,i,d){try{cache[t]=null;const{error}=await sb.from(t).update(d).eq('id',i);if(error){console.error('UPD '+t+':',error.message);return false}return true}catch(e){console.error('UPD '+t+':',e);return false}}
 async function del(t,i){try{cache[t]=null;const{error}=await sb.from(t).delete().eq('id',i);if(error){console.error('DEL '+t+':',error.message);return false}return true}catch(e){return false}}
-
 function montarSidebar(){
   var mapa={Administrador:['dashboard','leads','vendas','gastos','projetos','empresas','orcamentos','estoque','config'],Financeiro:['dashboard','leads','vendas','gastos','projetos','empresas','orcamentos','estoque'],Vendedor:['dashboard','leads','orcamentos'],Empresa:['dashboard','projetos']};
   var rotulos={dashboard:'📊 Dashboard',leads:'👥 Leads',vendas:'💰 Vendas',gastos:'🧾 Gastos',projetos:'🔬 Projetos',empresas:'🏢 Empresas',orcamentos:'📋 Orçamentos',estoque:'📦 Estoque',config:'⚙️ Config'};
@@ -279,7 +268,6 @@ async function logar(){
 function sair(){document.getElementById('app').style.display='none';document.getElementById('telaLogin').style.display='flex';document.getElementById('loginPass').value='';localStorage.removeItem('crm_user')}
 async function autoLogin(){try{var r=localStorage.getItem('crm_user');if(!r)return;var d=JSON.parse(r);document.getElementById('loginUser').value=d.user;document.getElementById('loginPass').value=d.pass;document.getElementById('rememberMe').checked=true;await logar()}catch(e){}}
 function ir(pagina){var itens=document.querySelectorAll('.sidebar-item');for(var i=0;i<itens.length;i++)itens[i].classList.remove('ativo');var el=document.querySelector('.sidebar-item[data-page="'+pagina+'"]');if(el)el.classList.add('ativo');var fn=window['pag'+pagina.charAt(0).toUpperCase()+pagina.slice(1)];if(fn)fn()}
-
 // DASHBOARD
 async function pagDashboard(){
   var m=document.getElementById('conteudo');
@@ -380,7 +368,7 @@ function filtrarDashAdmin(){
       if(window._gs)window._gs.destroy();
       var g={};L.forEach(function(l){g[l.andamento]=(g[l.andamento]||0)+1});
       var pal=['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'];
-      window._gs=new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k,i){return pal[i%pal.length]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}});
+      window._gs=new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k,i){return pal[i%pal.length]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}}});
       var ae=document.getElementById('alertasEst');
       if(ae){var cc=E.filter(function(e){return e.qtd<=5}),bb=E.filter(function(e){return e.qtd>5&&e.qtd<=15});
       if(!cc.length&&!bb.length)ae.innerHTML='<p style="color:var(--sucesso)">✅ Todos ok</p>';
@@ -414,7 +402,7 @@ function filtrarDashVend(){
       if(window._gs)window._gs.destroy();
       var g={};L.forEach(function(l){g[l.andamento]=(g[l.andamento]||0)+1});
       var pal=['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'];
-      window._gs=new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k,i){return pal[i%pal.length]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}});
+      window._gs=new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k,i){return pal[i%pal.length]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}}});
       if(window._glm)window._glm.destroy();
       var leadsPorMes={};
       L.forEach(function(l){if(l.data){var b2=l.data.split('/');if(b2.length==3){var key=b2[1]+'/'+b2[2];leadsPorMes[key]=(leadsPorMes[key]||0)+1}}});
@@ -428,44 +416,88 @@ function filtrarDashVend(){
     }catch(e){}
   },200);
 }
-function tcAba(aba){abaToggle=aba;var bts=document.querySelectorAll('#barraToggle button');var mp={'📦':'estoque','👥':'leads','💰':'vendas','🔬':'projetos','📋':'orcamentos'};for(var i=0;i<bts.length;i++){var t=bts[i].textContent.trim(),ab=null;for(var k in mp){if(t.includes(k)){ab=mp[k];break}}bts[i].classList.toggle('ativo',ab==aba)}var sub=document.getElementById('subBarra');if(aba=='leads')sub.innerHTML='<div class="sub-barra"><button class="ativo" onclick="subLead=\'status\';tcAba(\'leads\')">📊 Status</button><button onclick="subLead=\'vendedor\';tcAba(\'leads\')">👤 Vendedor</button></div>';else if(aba=='projetos')sub.innerHTML='<div class="sub-barra"><button class="ativo" onclick="subProj=\'empresa\';tcAba(\'projetos\')">🏢 Empresa</button><button onclick="subProj=\'pago\';tcAba(\'projetos\')">💰 Pago/Aberto</button></div>';else sub.innerHTML='';fazerGrafToggle()}
-function fazerGrafToggle(){
-  try{
-    if(ultimoGrafico)ultimoGrafico.destroy();
-    var c=document.getElementById('grafToggle');if(!c)return;var ctx=c.getContext('2d');
-    var E=window._E||[],V=window._V||[],L=window._L||[],P=window._P||[],O=window._O||[];
-    if(abaToggle=='estoque'){
-      var labs=[],qtds=[];
-      E.forEach(function(e){labs.push(e.item);qtds.push(e.qtd)});
-      if(!labs.length){labs.push('Sem');qtds.push(0)}
-      ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:labs,datasets:[{label:'Qtd em Estoque',data:qtds,backgroundColor:function(ctx){var v=qtds[ctx.dataIndex];return v<=3?'rgba(239,68,68,.7)':v<=10?'rgba(245,158,11,.7)':'rgba(34,197,94,.7)'}}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-    }else if(abaToggle=='leads'){
-      var g={};L.forEach(function(l){var s=l.andamento||'Sem';g[s]=(g[s]||0)+1});
-      if(Object.keys(g).length===0)g['Nenhum']=0;
-      ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:Object.keys(g),datasets:[{label:'Qtd de Leads',data:Object.values(g),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'].slice(0,Object.keys(g).length)}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-    }else if(abaToggle=='vendas'){
-      var vendasPorMes={};
-      V.forEach(function(v){var key=(v.mes||'?')+'/'+(v.ano||new Date().getFullYear());vendasPorMes[key]=(vendasPorMes[key]||0)+parseMon(v.valor)});
-      var vKeys=Object.keys(vendasPorMes).sort();
-      if(!vKeys.length){vKeys=['Sem'];vendasPorMes['Sem']=0}
-      ultimoGrafico=new Chart(ctx,{type:'bar',data:{labels:vKeys,datasets:[{label:'R$',data:vKeys.map(function(k){return vendasPorMes[k]}),backgroundColor:'rgba(34,197,94,.7)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-    }else if(abaToggle=='projetos'){
-      var g={};STATUS_LIST.forEach(function(s){g[s]=0});P.forEach(function(p){g[p.status||'A Fazer']=(g[p.status||'A Fazer']||0)+1});
-      ultimoGrafico=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k){return STATUS_CORES[k]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right'}}}});
-    }else if(abaToggle=='orcamentos'){
-      var g={};
-      O.forEach(function(o){var s=o.status||'Sem Status';g[s]=(g[s]||0)+1});
-      if(Object.keys(g).length===0)g['Nenhum orçamento']=1;
-      ultimoGrafico=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:['#22c55e','#f59e0b','#ef4444','#3b82f6','#a855f7'].slice(0,Object.keys(g).length),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right'}}}});
-    }
-  }catch(e){}
+// FUNÇÕES DO DASHBOARD TOGGLE E PDF
+function tcAba(aba){
+  abaToggle=aba;
+  var btns=document.querySelectorAll('#barraToggle button');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('ativo');
+  if(aba=='estoque'&&btns[0])btns[0].classList.add('ativo');
+  if(aba=='leads'&&btns[1])btns[1].classList.add('ativo');
+  if(aba=='vendas'&&btns[2])btns[2].classList.add('ativo');
+  if(aba=='projetos'&&btns[3])btns[3].classList.add('ativo');
+  if(aba=='orcamentos'&&btns[4])btns[4].classList.add('ativo');
+  var sb=document.getElementById('subBarra');
+  if(sb){
+    if(aba=='leads'){sb.innerHTML='<button class="ativo" onclick="subTcAba(\'status\')">Status</button><button onclick="subTcAba(\'origem\')">Origem</button><button onclick="subTcAba(\'vendedor\')">Vendedor</button>';subLead='status'}
+    else if(aba=='projetos'){sb.innerHTML='<button class="ativo" onclick="subTcAba(\'empresa\')">Empresa</button><button onclick="subTcAba(\'status\')">Status</button>';subProj='empresa'}
+    else sb.innerHTML='';
+  }
+  renderToggleChart();
 }
-
-// MODAL PDF
-function abrirModalPDF(){var sel=document.getElementById('pdfEmpresa');if(sel){sel.innerHTML='<option value="">Todas</option>';var p=window._P||_allProjetos||[],u=[];p.forEach(function(e){if(e.empresa&&u.indexOf(e.empresa)==-1)u.push(e.empresa)});u.sort();u.forEach(function(e){sel.innerHTML+='<option value="'+e+'">'+e+'</option>'})}document.getElementById('pdfDtIni').value='';document.getElementById('pdfDtFim').value='';['pcCliente','pcEmpresa','pcData','pcValor','pcTRT','pcPago'].forEach(function(c){try{document.getElementById(c).checked=true}catch(e){}});document.getElementById('modalPDF').classList.add('show')}
+function subTcAba(tipo){
+  var btns=document.querySelectorAll('#subBarra button');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('ativo');
+  if(event&&event.target)event.target.classList.add('ativo');
+  if(abaToggle=='leads')subLead=tipo;
+  if(abaToggle=='projetos')subProj=tipo;
+  renderToggleChart();
+}
+function renderToggleChart(){
+  var cv=document.getElementById('grafToggle');if(!cv||!window.Chart)return;
+  if(window._gt)window._gt.destroy();
+  var L=window._L||[],V=window._V||[],P=window._P||[],E=window._E||[],O=window._O||[];
+  var labels=[],data=[],cores=[];
+  var pal=['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'];
+  if(abaToggle=='estoque'){E.forEach(function(e){labels.push(e.item);data.push(e.qtd);cores.push(e.qtd<=3?'#ef4444':e.qtd<=10?'#f59e0b':'#22c55e')})}
+  else if(abaToggle=='leads'){
+    var m={};
+    if(subLead=='status'){L.forEach(function(l){m[l.andamento]=(m[l.andamento]||0)+1})}
+    else if(subLead=='origem'){L.forEach(function(l){m[l.origem]=(m[l.origem]||0)+1})}
+    else if(subLead=='vendedor'){L.forEach(function(l){m[l.vendedor]=(m[l.vendedor]||0)+1})}
+    labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length);
+  }
+  else if(abaToggle=='vendas'){var m={};V.forEach(function(v){m[v.empresa]=(m[v.empresa]||0)+1});labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length)}
+  else if(abaToggle=='projetos'){
+    if(subProj=='empresa'){var m={};P.forEach(function(p){m[p.empresa||'Sem']=(m[p.empresa||'Sem']||0)+1});labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length)}
+    else if(subProj=='status'){STATUS_LIST.forEach(function(s){labels.push(s);data.push(P.filter(function(p){return(p.status||'A Fazer')==s}).length);cores.push(STATUS_CORES[s])})}
+  }
+  else if(abaToggle=='orcamentos'){var m={};O.forEach(function(o){m[o.status]=(m[o.status]||0)+1});labels=Object.keys(m);data=Object.values(m);cores=pal.slice(0,labels.length)}
+  if(!labels.length){labels=['Sem'];data=[0];cores=['#555']}
+  window._gt=new Chart(cv,{type:'bar',data:{labels:labels,datasets:[{label:'Qtd',data:data,backgroundColor:cores}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+}
+function abrirModalPDF(){
+  var sel=document.getElementById('pdfEmpresa');
+  if(sel){sel.innerHTML='<option value="">Todas</option>';var emps=[...new Set((window._allProjetos||[]).map(function(p){return p.empresa}).filter(Boolean))];emps.sort();emps.forEach(function(e){sel.innerHTML+='<option value="'+e+'">'+e+'</option>'})}
+  document.getElementById('modalPDF').classList.add('show');
+}
 function fecharModalPDF(){document.getElementById('modalPDF').classList.remove('show')}
-function gerarPDF(){var dados=window._P||_allProjetos||[];var emp=document.getElementById('pdfEmpresa')?document.getElementById('pdfEmpresa').value:'',pg=document.getElementById('pdfPago')?document.getElementById('pdfPago').value:'';var di=document.getElementById('pdfDtIni')?document.getElementById('pdfDtIni').value:'',df=document.getElementById('pdfDtFim')?document.getElementById('pdfDtFim').value:'';if(emp)dados=dados.filter(function(p){return p.empresa==emp});if(pg)dados=dados.filter(function(p){return p.pago==pg});if(di){var a=di.split('/');if(a.length==3)dados=dados.filter(function(p){if(!p.data)return true;var b=p.data.split('/');return b.length==3?new Date(a[2],a[1]-1,a[0])<=new Date(b[2],b[1]-1,b[0]):true})}if(df){var a=df.split('/');if(a.length==3)dados=dados.filter(function(p){if(!p.data)return true;var b=p.data.split('/');return b.length==3?new Date(a[2],a[1]-1,a[0])>=new Date(b[2],b[1]-1,b[0]):true})}if(!dados.length){alert('Nenhum projeto encontrado');return}try{var doc=new jspdf.jsPDF();doc.setFontSize(16);doc.text('SF Projetos Elétricos',14,22);doc.setFontSize(12);doc.text('Relatório de Projetos',14,32);doc.setFontSize(10);doc.text('Gerado: '+hoje(),14,40);var cab=[];if(document.getElementById('pcCliente').checked)cab.push('Cliente');if(document.getElementById('pcEmpresa').checked)cab.push('Empresa');if(document.getElementById('pcData').checked)cab.push('Data');if(document.getElementById('pcValor').checked)cab.push('Valor');if(document.getElementById('pcTRT').checked)cab.push('TRT');if(document.getElementById('pcPago').checked)cab.push('Pago');var corpo=[];dados.forEach(function(p){var linha=[];if(document.getElementById('pcCliente').checked)linha.push(p.cliente);if(document.getElementById('pcEmpresa').checked)linha.push(p.empresa||'');if(document.getElementById('pcData').checked)linha.push(p.data||'');if(document.getElementById('pcValor').checked)linha.push('R$ '+fmtNum(parseMon(p.valor)));if(document.getElementById('pcTRT').checked)linha.push('R$ '+fmtNum(parseMon(p.trt)));if(document.getElementById('pcPago').checked)linha.push(p.pago=='SIM'?'Sim':'Não');corpo.push(linha)});doc.autoTable({startY:48,head:[cab],body:corpo,theme:'striped',headStyles:{fillColor:[37,99,235]}});doc.save('projetos.pdf');fecharModalPDF()}catch(e){alert('Erro PDF: '+e.message)}}
-
+async function gerarPDF(){
+  var emp=document.getElementById('pdfEmpresa')?document.getElementById('pdfEmpresa').value:'';
+  var pg=document.getElementById('pdfPago')?document.getElementById('pdfPago').value:'';
+  var di=document.getElementById('pdfDtIni')?document.getElementById('pdfDtIni').value:'';
+  var df=document.getElementById('pdfDtFim')?document.getElementById('pdfDtFim').value:'';
+  var P=await get('projetos');
+  if(emp)P=P.filter(function(p){return p.empresa==emp});
+  if(pg)P=P.filter(function(p){return p.pago==pg});
+  if(di||df){P=P.filter(function(p){if(!p.data)return true;var b=p.data.split('/');if(b.length!=3)return true;var d=new Date(b[2],b[1]-1,b[0]);if(di){var a=di.split('/');if(a.length==3&&new Date(a[2],a[1]-1,a[0])>d)return false}if(df){var a=df.split('/');if(a.length==3&&new Date(a[2],a[1]-1,a[0])<d)return false}return true})}
+  try{
+    var doc=new jspdf.jsPDF();
+    doc.setFontSize(16);doc.text('SF Projetos Elétricos - Relatório de Projetos',14,22);
+    doc.setFontSize(10);doc.text('Gerado: '+hoje(),14,30);
+    var head=['#'];
+    if(document.getElementById('pcCliente').checked)head.push('Cliente');
+    if(document.getElementById('pcEmpresa').checked)head.push('Empresa');
+    if(document.getElementById('pcData').checked)head.push('Data');
+    if(document.getElementById('pcValor').checked)head.push('Valor');
+    if(document.getElementById('pcTRT').checked)head.push('TRT');
+    if(document.getElementById('pcPago').checked)head.push('Pago');
+    var body=[];
+    P.forEach(function(p,i){var row=[String(i+1)];if(document.getElementById('pcCliente').checked)row.push(p.cliente||'');if(document.getElementById('pcEmpresa').checked)row.push(p.empresa||'');if(document.getElementById('pcData').checked)row.push(p.data||'');if(document.getElementById('pcValor').checked)row.push('R$ '+fmtNum(parseMon(p.valor)));if(document.getElementById('pcTRT').checked)row.push('R$ '+fmtNum(parseMon(p.trt)));if(document.getElementById('pcPago').checked)row.push(p.pago||'');body.push(row)});
+    if(doc.autoTable){doc.autoTable({startY:38,head:[head],body:body,theme:'striped',headStyles:{fillColor:[37,99,235]}})}
+    doc.save('projetos_'+hoje().replace(/\//g,'-')+'.pdf');
+    fecharModalPDF();
+  }catch(e){alert('Erro PDF: '+e.message)}
+}
 // LEADS
 async function pagLeads(){
   if(!['Administrador','Financeiro','Vendedor'].includes(usuarioAtual.funcao)){document.getElementById('conteudo').innerHTML='<div class="titulo-pag">👥 Leads</div><p>Acesso negado</p>';return}
@@ -515,7 +547,6 @@ async function altLead(id,c,v){await upd('leads',id,{[c]:v})}
 async function mudarAndamento(id,v){var l=await get('leads');var lead=l.find(function(x){return x.id==id});if(!lead)return;if(v=='Venda Fechada'&&lead.andamento!='Venda Fechada'){idxVender=lead;document.getElementById('infoGasto').textContent='Cliente: '+lead.nome+' | '+hoje();document.getElementById('gastoValor').value=lead.valor||'';document.getElementById('gastoGasto').value='';document.getElementById('gastoEmpresa').value='SF';document.getElementById('gastoPotencia').value='';document.getElementById('modalGasto').classList.add('show');return}if(lead.andamento=='Venda Fechada'&&v!='Venda Fechada'){var vendas=await get('vendas');var vDel=vendas.filter(function(x){return x.cliente==lead.nome});for(var i=0;i<vDel.length;i++){var gastos=await get('gastos');var gDel=gastos.filter(function(x){return x.cliente==lead.nome});for(var j=0;j<gDel.length;j++){await del('gastos',gDel[j].id)}await del('vendas',vDel[i].id)}limparCache()}await upd('leads',id,{andamento:v});pagLeads()}
 function fecharModalGasto(){document.getElementById('modalGasto').classList.remove('show');idxVender=null}
 async function confirmarVenda(){if(!idxVender)return;var vl=document.getElementById('gastoValor').value.trim(),g=document.getElementById('gastoGasto').value.trim(),emp=document.getElementById('gastoEmpresa').value,pot=document.getElementById('gastoPotencia').value.trim();if(!vl||!g){alert('Preencha valor e gasto');return}var mm=meses()[new Date().getMonth()];var aa=String(new Date().getFullYear());await ins('vendas',{cliente:idxVender.nome,empresa:emp,potencia:pot,mes:mm,ano:aa,valor:vl,pago:'SIM',gasto:'R$ '+fmtNum(parseMon(g))});await ins('gastos',{venda:idxVender.nome,cliente:idxVender.nome,empresa:emp,mes:mm,valor_venda:vl,gasto:'R$ '+fmtNum(parseMon(g)),lucro:'R$ '+fmtNum(parseMon(vl)-parseMon(g))});await upd('leads',idxVender.id,{andamento:'Venda Fechada'});limparCache();fecharModalGasto();pagLeads()}
-
 // VENDAS
 async function pagVendas(){
   var d=await get('vendas');_allVendas=d;
@@ -573,7 +604,6 @@ function filtrarVendas(){
 }
 async function altVenda(id,c,v){await upd('vendas',id,{[c]:v})}
 async function delVenda(id){if(!confirm('Excluir? O gasto vinculado também será removido.'))return;var d=await get('vendas');var v=d.find(function(x){return x.id==id});if(v){var gastos=await get('gastos');var gDel=gastos.filter(function(x){return x.cliente==v.cliente});for(var i=0;i<gDel.length;i++){await del('gastos',gDel[i].id)}}await del('vendas',id);limparCache();pagVendas()}
-
 // GASTOS
 async function pagGastos(){
   var d=await get('gastos');_allGastos=d;
@@ -609,7 +639,6 @@ function filtrarGastos(){
   document.getElementById('gastBody').innerHTML=h;
   document.getElementById('gastCount').textContent=d.length+' registros • Lucro: R$ '+fmtNum(tl);
 }
-
 // EMPRESAS
 async function pagEmpresas(){
   if(!['Administrador','Financeiro'].includes(usuarioAtual.funcao)){document.getElementById('conteudo').innerHTML='<div class="titulo-pag">🏢 Empresas</div><p>Acesso negado</p>';return}
@@ -624,7 +653,6 @@ function fecharModalEmp(){document.getElementById('modalEmpresa').classList.remo
 async function salvarModalEmp(){var rz=document.getElementById('empRazao').value.trim();if(!rz){alert('Informe a razão social');return}var dados={cnpj:document.getElementById('empCnpj').value.trim(),razao_social:rz,nome_fantasia:document.getElementById('empFantasia').value.trim(),telefone:document.getElementById('empTel').value.trim(),endereco:document.getElementById('empEnd').value.trim(),cidade:document.getElementById('empCidade').value.trim(),estado:document.getElementById('empEstado').value.trim(),cep:document.getElementById('empCep').value.trim(),email:document.getElementById('empEmail').value.trim()};if(idxEditEmp){await upd('empresas',idxEditEmp,dados)}else{await ins('empresas',dados)}fecharModalEmp();pagEmpresas()}
 async function editEmp(id){var d=await get('empresas');var e=d.find(function(x){return x.id==id});if(e)abrirModalEmp(e)}
 async function delEmp(id){if(!confirm('Excluir esta empresa?'))return;await del('empresas',id);pagEmpresas()}
-
 // PROJETOS (KANBAN)
 async function pagProjetos(){
   var isEmp=(usuarioAtual.funcao=='Empresa');
@@ -756,7 +784,6 @@ async function salvarModalProj(){
 }
 async function excluirModalProj(){if(!idxEditProjModal)return;if(!confirm('Excluir este projeto?'))return;await del('projetos',idxEditProjModal);fecharModalProj();pagProjetos()}
 function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='A Fazer';document.getElementById('mpPotencia').value='';document.getElementById('mpPotenciaFeedback').textContent='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='R$ 70,00';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
-
 // ORÇAMENTOS
 async function pagOrcamentos(){ORC_HIST=await get('orcamentos');document.getElementById('conteudo').innerHTML='<div class="titulo-pag">📋 Orçamentos</div><div class="orc-tema" style="background:#0f1724;border-radius:12px;padding:20px"><div class="orc-nav"><span class="ativo" onclick="navOrc(\'criar\')">💰 Criar</span><span onclick="navOrc(\'hist\')">📜 Histórico</span></div><div id="orcBody">'+htmlCriarOrc()+'</div></div>';setTimeout(function(){document.getElementById('orcId').value=gerarOrcId();carregarSelOrc()},100)}
 function gerarOrcId(){var m=String(new Date().getMonth()+1).padStart(2,'0'),a=String(new Date().getFullYear()).slice(-2),pre=m+'/'+a+'/';var seq=[];(ORC_HIST.length?ORC_HIST:[]).forEach(function(o){if(o.id&&o.id.indexOf(pre)===0){var n=parseInt(o.id.split('/')[2]);if(!isNaN(n))seq.push(n)}});return pre+String((seq.length?Math.max.apply(null,seq):0)+1).padStart(3,'0')}
@@ -782,7 +809,6 @@ function filtrarOrcHist(){
 async function altStatusOrc(id,v){await sb.from('orcamentos').update({status:v}).eq('id',id);_allOrcamentos=null}
 function reprintOrc(id,nome,total){try{var doc=new jspdf.jsPDF();doc.setFontSize(16);doc.text('SF Projetos Elétricos',14,22);doc.setFontSize(12);doc.text('Orçamento: '+id,14,32);doc.text('Cliente: '+nome,14,42);doc.text('Valor: R$ '+fmtNum(total),14,52);doc.text('Emitido: '+hoje(),14,62);doc.save('orcamento_'+nome.replace(/\s/g,'_')+'.pdf')}catch(e){alert('Erro: '+e.message)}}
 async function delOrcHist(id){if(!confirm('Excluir?'))return;await sb.from('orcamentos').delete().eq('id',id);await pagOrcamentos()}
-
 // ESTOQUE
 async function pagEstoque(){
   var d=await get('estoque');_allEstoque=d;
@@ -825,7 +851,6 @@ function fecharModalEstoque(){document.getElementById('modalEstoque').classList.
 async function salvarEstoque(){var item=document.getElementById('estqItem').value.trim(),tipo=document.getElementById('estqTipo').value.trim(),marca=document.getElementById('estqMarca').value.trim(),qtd=parseInt(document.getElementById('estqQtd').value)||0,un=document.getElementById('estqUn').value,vp=parseFloat(document.getElementById('estqPago').value)||0,vv=parseFloat(document.getElementById('estqVenda').value)||0,fornec=document.getElementById('estqFornec').value.trim();if(!item){alert('Nome obrigatório');return}if(idEditEstq){await upd('estoque',idEditEstq,{item,tipo,marca,qtd,un,valor_pago:vp,valor_venda:vv,fornec})}else{await ins('estoque',{item,tipo,marca,qtd,un,valor_pago:vp,valor_venda:vv,fornec})}fecharModalEstoque();pagEstoque()}
 async function editEstq(id){var d=await get('estoque');var e=d.find(function(x){return x.id==id});if(e)abrirModalEstq(e)}
 async function delEstq(id){if(!confirm('Excluir?'))return;await del('estoque',id);pagEstoque()}
-
 // CONFIG
 async function pagConfig(){
   if(usuarioAtual.funcao!='Administrador'){document.getElementById('conteudo').innerHTML='<div class="titulo-pag">⚙️ Config</div><p>Acesso restrito</p>';return}
@@ -838,7 +863,6 @@ async function pagConfig(){
 async function fazerBackup(){var msg=document.getElementById('bkMsg');if(!msg)return;msg.textContent='Gerando backup...';msg.style.color='var(--aviso)';try{var wb=XLSX.utils.book_new();var tabelas=['leads','vendas','gastos','empresas','projetos','estoque','orcamentos','usuarios'];for(var i=0;i<tabelas.length;i++){var data=await get(tabelas[i]);if(tabelas[i]==='projetos'){data=data.map(function(p){var c=Object.assign({},p);if(c.documentos){try{c.documentos=JSON.parse(c.documentos).map(function(d){return d.nome}).join('; ')}catch(e){}}if(c.fotos){try{c.fotos=JSON.parse(c.fotos).length+' foto(s)'}catch(e){}}return c})}if(tabelas[i]==='orcamentos'){data=data.map(function(o){var c=Object.assign({},o);if(c.itens){try{c.itens=JSON.stringify(c.itens)}catch(e){}}return c})}var ws=XLSX.utils.json_to_sheet(data.length?data:[{aviso:'Sem dados'}]);XLSX.utils.book_append_sheet(wb,ws,tabelas[i])}XLSX.writeFile(wb,'backup_crm_'+hoje().replace(/\//g,'-')+'.xlsx');msg.textContent='✅ Backup gerado!';msg.style.color='var(--sucesso)'}catch(e){msg.textContent='Erro: '+e.message;msg.style.color='var(--perigo)'}}
 async function addUser(){var n=document.getElementById('cNome').value.trim(),u=document.getElementById('cUser').value.trim(),p=document.getElementById('cPass').value.trim(),f=document.getElementById('cFun').value,emp=document.getElementById('cEmpresa').value.trim();if(!n||!u||!p){document.getElementById('cMsg').textContent='Preencha todos';return}if(f=='Empresa'&&!emp){document.getElementById('cMsg').textContent='Informe a empresa';return}var ex=await get('usuarios');if(ex.find(function(x){return x.usuario==u})){document.getElementById('cMsg').textContent='Usuário já existe';return}await ins('usuarios',{nome:n,usuario:u,senha:p,funcao:f,empresa:emp});document.getElementById('cMsg').textContent='Cadastrado!';document.getElementById('cNome').value='';document.getElementById('cUser').value='';document.getElementById('cPass').value='';document.getElementById('cEmpresa').value='';pagConfig()}
 async function rmUser(id){if(!confirm('Remover?'))return;await del('usuarios',id);pagConfig()}
-
 document.addEventListener('DOMContentLoaded',function(){if(localStorage.getItem('tema')=='dark'){document.body.classList.add('dark');document.getElementById('btnTema').textContent='☀️'}autoLogin()});
 </script>
 </body>
