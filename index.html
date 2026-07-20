@@ -372,7 +372,7 @@ function filtrarDashAdmin(){
       if(window._gps)window._gps.destroy();
       var projSts={};STATUS_LIST.forEach(function(s){projSts[s]=0});P.forEach(function(p){projSts[p.status||'A Fazer']=(projSts[p.status||'A Fazer']||0)+1});
       var c3=document.getElementById('grafProjStatus');
-      if(c3)window._gps=new Chart(c3,{type:'doughnut',data:{labels:Object.keys(projSts),datasets:[{data:Object.values(projSts),backgroundColor:Object.keys(projSts).map(function(k){return STATUS_CORES[k]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}});
+      if(c3)window._gps=new Chart(c3,{type:'doughnut',data:{labels:Object.keys(projSts),datasets:[{data:Object.values(projSts),backgroundColor:Object.keys(projSts).map(function(k){return STATUS_CORES[k]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}}});
       if(window._gpe)window._gpe.destroy();
       var projEmp={};P.forEach(function(p){projEmp[p.empresa||'Sem']=(projEmp[p.empresa||'Sem']||0)+1});
       var c4=document.getElementById('grafProjEmp');
