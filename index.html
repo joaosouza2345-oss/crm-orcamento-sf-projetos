@@ -115,7 +115,65 @@ tr:hover td{background:var(--bg3)}
 .filtro-bar .grupo{min-width:120px}
 .filtro-bar input,.filtro-bar select{padding:6px 10px;border:1px solid var(--input-border);border-radius:5px;background:var(--input-bg);color:var(--text);font-size:13px;outline:none}
 .filtro-bar input:focus,.filtro-bar select:focus{border-color:var(--primaria)}
-@media(max-width:768px){.sidebar{transform:translateX(-100%)}.conteudo{margin-left:0;padding:14px}.cartoes{grid-template-columns:1fr 1fr}.linha-graficos{grid-template-columns:1fr}.form-grid,.form-grid-3,.form-grid-4{grid-template-columns:1fr}.kanban-col{min-width:auto}.filtro-bar{flex-direction:column}}
+/* DASHBOARD PRO */
+.dash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.dash-header h1{font-size:24px;font-weight:800}
+.dash-header .sub{font-size:13px;color:var(--text2);margin-top:2px}
+.dash-toggle{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:8px}
+.dash-toggle button{padding:5px 14px;border:none;border-radius:6px;background:transparent;color:var(--text2);cursor:pointer;font-size:12px;font-weight:600}
+.dash-toggle button.ativo{background:var(--primaria);color:#fff}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.kpi-card{background:var(--bg2);border:1px solid var(--borda);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.kpi-card .kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--text2)}
+.kpi-card .kpi-value{font-size:24px;font-weight:800;margin-top:6px}
+.kpi-card .kpi-growth{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.kpi-card .kpi-growth.up{color:var(--sucesso)}
+.kpi-card .kpi-growth.down{color:var(--perigo)}
+.kpi-card .kpi-spark{position:absolute;bottom:0;right:0;width:80px;height:36px;opacity:.7}
+.kpi-card.green{border-left:3px solid var(--sucesso)}
+.kpi-card.orange{border-left:3px solid var(--aviso)}
+.kpi-card.purple{border-left:3px solid #a855f7}
+.kpi-card.blue{border-left:3px solid var(--primaria)}
+.dash-main{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:16px}
+.dash-chart-box{background:var(--bg2);border:1px solid var(--borda);border-radius:12px;padding:16px}
+.dash-chart-box h3{font-size:14px;font-weight:700;margin-bottom:2px}
+.dash-chart-box .desc{font-size:12px;color:var(--text2);margin-bottom:12px}
+.dash-chart-legend{display:flex;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.dash-chart-legend span{font-size:11px;display:flex;align-items:center;gap:5px;color:var(--text2)}
+.dash-chart-legend span::before{content:'';width:10px;height:10px;border-radius:50%}
+.dash-chart-legend .lg-fat::before{background:#3b82f6}
+.dash-chart-legend .lg-rec::before{background:#22c55e}
+.dash-chart-legend .lg-desp::before{background:#ef4444}
+.dash-chart-legend .lg-res::before{background:#a855f7}
+.indicadores-box{background:var(--bg2);border:1px solid var(--borda);border-radius:12px;padding:16px}
+.indicadores-box h3{font-size:14px;font-weight:700;margin-bottom:14px}
+.ind-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--borda)}
+.ind-item:last-child{border-bottom:none}
+.ind-item .ind-label{font-size:13px;color:var(--text2)}
+.ind-item .ind-val{font-size:15px;font-weight:700}
+.ind-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;margin-left:6px}
+.ind-tag.ok{background:rgba(34,197,94,.15);color:var(--sucesso)}
+.ind-tag.medio{background:rgba(245,158,11,.15);color:var(--aviso)}
+.ind-tag.baixo{background:rgba(239,68,68,.15);color:var(--perigo)}
+.dash-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.dash-cat-box{background:var(--bg2);border:1px solid var(--borda);border-radius:12px;padding:16px}
+.dash-cat-box h3{font-size:14px;font-weight:700;margin-bottom:12px}
+.cat-bar-row{margin-bottom:10px}
+.cat-bar-row .cat-info{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.cat-bar-row .cat-info .cat-nome{color:var(--text);font-weight:600}
+.cat-bar-row .cat-info .cat-val{color:var(--text2)}
+.cat-bar{height:6px;border-radius:3px;background:var(--bg3);overflow:hidden}
+.cat-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.cat-link{font-size:12px;color:var(--primaria);cursor:pointer;margin-top:8px;display:inline-block}
+.donut-center{position:relative;display:flex;align-items:center;justify-content:center}
+.donut-center .donut-total{position:absolute;text-align:center}
+.donut-center .donut-total .val{font-size:22px;font-weight:800}
+.donut-center .donut-total .lbl{font-size:11px;color:var(--text2)}
+.donut-legend{margin-top:12px}
+.donut-legend .dl-item{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:6px}
+.donut-legend .dl-dot{width:10px;height:10px;border-radius:50%}
+.donut-legend .dl-pct{margin-left:auto;font-weight:700}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.conteudo{margin-left:0;padding:14px}.cartoes{grid-template-columns:1fr 1fr}.linha-graficos{grid-template-columns:1fr}.form-grid,.form-grid-3,.form-grid-4{grid-template-columns:1fr}.kanban-col{min-width:auto}.filtro-bar{flex-direction:column}.kpi-row{grid-template-columns:1fr 1fr}.dash-main{grid-template-columns:1fr}.dash-bottom{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -279,25 +337,33 @@ async function pagDashboard(){
     m.innerHTML='<div class="titulo-pag">📊 Dashboard</div><div class="filtro-bar"><div class="grupo"><label>Busca</label><input id="fDashBusca" placeholder="Nome..." oninput="filtrarDashVend()"></div><div class="grupo"><label>Status</label><select id="fDashSts" onchange="filtrarDashVend()"><option value="">Todos</option><option>Venda Fechada</option><option>Negociação</option><option>Orçamento Gerado</option><option>Contato Inicial</option><option>Sem Resposta</option></select></div></div><div class="cartoes" id="dashCards"></div><div class="linha-graficos"><div class="grafico-card"><h3>📅 Leads por Mês</h3><canvas id="grafLeadsMes" style="max-height:220px"></canvas></div><div class="grafico-card"><h3>📊 Leads por Status</h3><canvas id="grafLeadsStatus" style="max-height:220px"></canvas></div></div><div class="grafico-card"><h3>🎯 Status Leads</h3><canvas id="grafStatus" style="max-height:200px"></canvas></div>';
     try{var L=await get('leads');_allLeads=L;filtrarDashVend()}catch(e){}return;
   }
-  m.innerHTML='<div class="titulo-pag">📊 Dashboard</div>'+
+  m.innerHTML='<div class="dash-header">'+
+    '<div><h1>📊 Visão Geral</h1><p class="sub">Resumo completo do desempenho do CRM.</p></div>'+
+    '<div class="dash-toggle"><button class="ativo" onclick="dashRegime(this,\'mes\')">Mês</button><button onclick="dashRegime(this,\'ano\')">Ano</button></div>'+
+    '</div>'+
     '<div class="filtro-bar">'+
     '<div class="grupo"><label>Empresa</label><select id="fDashEmp" onchange="filtrarDashAdmin()"><option value="">Todas</option></select></div>'+
     '<div class="grupo"><label>Início</label><input id="fDashIni" placeholder="dd/mm/aaaa" onchange="filtrarDashAdmin()"></div>'+
     '<div class="grupo"><label>Fim</label><input id="fDashFim" placeholder="dd/mm/aaaa" onchange="filtrarDashAdmin()"></div>'+
     '<button class="btn btn-outline" onclick="limparFiltrosDash()">Limpar</button></div>'+
-    '<div class="cartoes" id="dashCards"></div>'+
-    '<div class="grafico-card"><div class="barra-abas" id="barraToggle">'+
+    '<div class="kpi-row" id="kpiRow"></div>'+
+    '<div class="dash-main">'+
+      '<div class="dash-chart-box"><h3>📈 Evolução Financeira</h3><p class="desc">Receita, gastos e lucro por mês.</p><div class="dash-chart-legend"><span class="lg-fat">Faturado</span><span class="lg-rec">Recebido</span><span class="lg-desp">Despesas</span><span class="lg-res">Resultado</span></div><canvas id="grafEvolucao" style="max-height:300px"></canvas></div>'+
+      '<div class="indicadores-box"><h3>📊 Indicadores</h3><div id="indicadoresList"></div></div>'+
+    '</div>'+
+    '<div class="dash-bottom">'+
+      '<div class="dash-cat-box"><h3>💰 Faturamento por Empresa</h3><div id="fatPorEmpresa"></div></div>'+
+      '<div class="dash-cat-box"><h3>🧾 Gastos por Empresa</h3><div id="gastoPorEmpresa"></div></div>'+
+      '<div class="dash-cat-box"><h3>🎯 Distribuição por Status</h3><div class="donut-center"><canvas id="grafDonutStatus" style="max-height:180px"></canvas><div class="donut-total" id="donutTotal"></div></div><div class="donut-legend" id="donutLegend"></div></div>'+
+    '</div>'+
+    '<div class="grafico-card" style="margin-top:14px"><div class="barra-abas" id="barraToggle">'+
     '<button class="ativo" onclick="tcAba(\'estoque\')">📦 Estoque</button>'+
     '<button onclick="tcAba(\'leads\')">👥 Leads</button>'+
     '<button onclick="tcAba(\'vendas\')">💰 Vendas</button>'+
     '<button onclick="tcAba(\'projetos\')">🔬 Projetos</button>'+
     '<button onclick="tcAba(\'orcamentos\')">📋 Orçamentos</button></div>'+
     '<div id="subBarra"></div><canvas id="grafToggle" style="max-height:300px"></canvas></div>'+
-    '<div class="linha-graficos"><div class="grafico-card"><h3>📈 Lucro</h3><canvas id="grafLucro"></canvas></div><div class="grafico-card"><h3>📊 Vendas/Mês</h3><canvas id="grafVendasMes"></canvas></div></div>'+
-    '<div class="linha-graficos"><div class="grafico-card"><h3>📅 Leads por Mês</h3><canvas id="grafLeadsMesDash" style="max-height:220px"></canvas></div><div class="grafico-card"><h3>📊 Leads por Status (qtd)</h3><canvas id="grafLeadsStatusDash" style="max-height:220px"></canvas></div></div>'+
-    '<div class="linha-graficos"><div class="grafico-card"><h3>🔬 Projetos por Status</h3><canvas id="grafProjStatus" style="max-height:220px"></canvas></div><div class="grafico-card"><h3>🏢 Projetos por Empresa</h3><canvas id="grafProjEmp" style="max-height:220px"></canvas></div></div>'+
-    '<div class="grafico-card"><h3>🎯 Status Leads</h3><canvas id="grafStatus" style="max-height:200px"></canvas></div>'+
-    '<div class="grafico-card"><h3>📦 Alertas Estoque</h3><div id="alertasEst"></div></div>';
+    '<div class="grafico-card" style="margin-top:14px"><h3>📦 Alertas Estoque</h3><div id="alertasEst"></div></div>';
   try{
     var L=await get('leads'),V=await get('vendas'),E=await get('estoque'),P=await get('projetos'),O=await get('orcamentos');
     _allLeads=L;_allVendas=V;_allEstoque=E;_allProjetos=P;_allOrcamentos=O;
@@ -307,6 +373,7 @@ async function pagDashboard(){
     filtrarDashAdmin();
   }catch(e){}
 }
+function dashRegime(btn,reg){document.querySelectorAll('.dash-toggle button').forEach(function(b){b.classList.remove('ativo')});btn.classList.add('ativo');window._dashRegime=reg;filtrarDashAdmin()}
 function limparFiltrosDash(){
   if(document.getElementById('fDashEmp'))document.getElementById('fDashEmp').value='';
   if(document.getElementById('fDashIni'))document.getElementById('fDashIni').value='';
@@ -329,46 +396,80 @@ function filtrarDashAdmin(){
   if(di||df){V=V.filter(function(v){return dateInRange(v.data||'')});P=P.filter(function(p){return dateInRange(p.data||'')})}
   var vends=L.filter(function(l){return l.andamento=='Venda Fechada'}).length;
   var rec=V.reduce(function(s,v){return s+parseMon(v.valor)},0);
+  var gast=V.reduce(function(s,v){return s+parseMon(v.gasto)},0);
+  var trtTotal=P.reduce(function(s,p){return s+parseMon(p.trt)},0);
+  var lucro=rec-gast-trtTotal;
   var tx=L.length>0?((vends/L.length)*100).toFixed(1):0;
-  document.getElementById('dashCards').innerHTML='<div class="cartao"><div class="rotulo">Leads</div><div class="valor">'+L.length+'</div><div class="sub">'+vends+' ('+tx+'%)</div></div><div class="cartao"><div class="rotulo">Receita</div><div class="valor">R$ '+fmtNum(rec)+'</div><div class="sub">'+V.length+' vendas</div></div><div class="cartao"><div class="rotulo">Projetos</div><div class="valor">'+P.length+'</div></div><div class="cartao"><div class="rotulo">Conv</div><div class="valor">'+tx+'%</div></div>';
+  var margem=rec>0?((lucro/rec)*100).toFixed(0):0;
+  document.getElementById('kpiRow').innerHTML=
+    '<div class="kpi-card blue"><div class="kpi-label">Faturado</div><div class="kpi-value">R$ '+fmtNum(rec)+'</div><div class="kpi-growth up">↑ '+V.length+' vendas</div><canvas class="kpi-spark" id="sparkFat"></canvas></div>'+
+    '<div class="kpi-card orange"><div class="kpi-label">Custos</div><div class="kpi-value">R$ '+fmtNum(gast+trtTotal)+'</div><div class="kpi-growth down">↓ Gastos + TRT</div><canvas class="kpi-spark" id="sparkCust"></canvas></div>'+
+    '<div class="kpi-card purple"><div class="kpi-label">Margem</div><div class="kpi-value">'+margem+'%</div><div class="kpi-growth '+(margem>=50?'up':'down')+'">'+(margem>=50?'↑':'↓')+' Lucro/Faturado</div><canvas class="kpi-spark" id="sparkMarg"></canvas></div>'+
+    '<div class="kpi-card green"><div class="kpi-label">Resultado</div><div class="kpi-value" style="color:'+(lucro>=0?'var(--sucesso)':'var(--perigo)')+'">R$ '+fmtNum(lucro)+'</div><div class="kpi-growth '+(lucro>=0?'up':'down')+'">'+(lucro>=0?'↑':'↓')+' Lucro líquido</div><canvas class="kpi-spark" id="sparkRes"></canvas></div>';
   window._L=L;window._V=V;window._E=E;window._P=P;window._O=O;
+  var pendentes=V.filter(function(v){return v.pago!='SIM'}).length;
+  var recebido=V.filter(function(v){return v.pago=='SIM'}).length;
+  var taxaRec=V.length>0?((recebido/V.length)*100).toFixed(1):0;
+  var projAndamento=P.filter(function(p){return p.status=='Em Andamento'}).length;
+  var projConcluidos=P.filter(function(p){return p.status=='Concluído'}).length;
+  document.getElementById('indicadoresList').innerHTML=
+    '<div class="ind-item"><span class="ind-label">Taxa de Conversão</span><span><span class="ind-val">'+tx+'%</span><span class="ind-tag '+(tx>=30?'ok':tx>=15?'medio':'baixo')+'">'+(tx>=30?'Ótima':tx>=15?'Média':'Baixa')+'</span></span></div>'+
+    '<div class="ind-item"><span class="ind-label">Taxa de Recebimento</span><span><span class="ind-val">'+taxaRec+'%</span><span class="ind-tag '+(taxaRec>=70?'ok':taxaRec>=50?'medio':'baixo')+'">'+(taxaRec>=70?'Ótima':taxaRec>=50?'Média':'Baixa')+'</span></span></div>'+
+    '<div class="ind-item"><span class="ind-label">Vendas Pendentes</span><span><span class="ind-val">'+pendentes+'</span><span class="ind-tag medio">Aguardando</span></span></div>'+
+    '<div class="ind-item"><span class="ind-label">Projetos em Andamento</span><span><span class="ind-val">'+projAndamento+'</span><span class="ind-tag '+(projAndamento>0?'medio':'ok')+'">'+(projAndamento>0?'Ativo':'Parado')+'</span></span></div>'+
+    '<div class="ind-item"><span class="ind-label">Projetos Concluídos</span><span><span class="ind-val">'+projConcluidos+'</span><span class="ind-tag ok">✓</span></span></div>'+
+    '<div class="ind-item"><span class="ind-label">Total de Leads</span><span><span class="ind-val">'+L.length+'</span><span class="ind-tag ok">'+vends+' fechados</span></span></div>';
+  var fatEmp={};V.forEach(function(v){fatEmp[v.empresa||'Sem']=(fatEmp[v.empresa||'Sem']||0)+parseMon(v.valor)});
+  var fatKeys=Object.keys(fatEmp).sort(function(a,b){return fatEmp[b]-fatEmp[a]});
+  var fatMax=Math.max.apply(null,fatKeys.map(function(k){return fatEmp[k]}).concat([1]));
+  var fatHtml='';fatKeys.forEach(function(k){var pct=(fatEmp[k]/fatMax*100).toFixed(0);var cor=['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899','#14b8a6'][fatKeys.indexOf(k)%6];fatHtml+='<div class="cat-bar-row"><div class="cat-info"><span class="cat-nome">'+k+'</span><span class="cat-val">R$ '+fmtNum(fatEmp[k])+'</span></div><div class="cat-bar"><div class="cat-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div></div>'});
+  if(!fatKeys.length)fatHtml='<p style="color:var(--text2);font-size:13px">Sem dados</p>';
+  document.getElementById('fatPorEmpresa').innerHTML=fatHtml;
+  var gastEmp={};V.forEach(function(v){gastEmp[v.empresa||'Sem']=(gastEmp[v.empresa||'Sem']||0)+parseMon(v.gasto)});
+  var gastKeys=Object.keys(gastEmp).sort(function(a,b){return gastEmp[b]-gastEmp[a]});
+  var gastMax=Math.max.apply(null,gastKeys.map(function(k){return gastEmp[k]}).concat([1]));
+  var gastHtml='';gastKeys.forEach(function(k){var pct=(gastEmp[k]/gastMax*100).toFixed(0);gastHtml+='<div class="cat-bar-row"><div class="cat-info"><span class="cat-nome">'+k+'</span><span class="cat-val">R$ '+fmtNum(gastEmp[k])+'</span></div><div class="cat-bar"><div class="cat-bar-fill" style="width:'+pct+'%;background:#ef4444"></div></div></div>'});
+  if(!gastKeys.length)gastHtml='<p style="color:var(--text2);font-size:13px">Sem dados</p>';
+  document.getElementById('gastoPorEmpresa').innerHTML=gastHtml;
   tcAba(abaToggle);
   setTimeout(function(){
     try{
       if(!window.Chart)return;
-      if(window._gl)window._gl.destroy();
-      var trtMap={};P.forEach(function(p){trtMap[p.cliente]=parseMon(p.trt)});
-      var l2=[],d2=[],c2=[],mx=V.length>10?10:V.length;
-      for(var i=0;i<mx;i++){l2.push(V[i].cliente.slice(0,12));var l=parseMon(V[i].valor)-parseMon(V[i].gasto)-(trtMap[V[i].cliente]||0);d2.push(l);c2.push(l>=0?'rgba(34,197,94,.8)':'rgba(239,68,68,.8)')}
-      if(!l2.length){l2.push('Sem');d2.push(0);c2.push('#555')}
-      window._gl=new Chart(document.getElementById('grafLucro'),{type:'bar',data:{labels:l2,datasets:[{label:'Lucro',data:d2,backgroundColor:c2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-      if(window._gvm)window._gvm.destroy();
-      var vendasPorMes={};
-      V.forEach(function(v){var key=(v.mes||'?')+'/'+(v.ano||new Date().getFullYear());vendasPorMes[key]=(vendasPorMes[key]||0)+parseMon(v.valor)});
-      var vKeys=Object.keys(vendasPorMes).sort();
-      window._gvm=new Chart(document.getElementById('grafVendasMes'),{type:'line',data:{labels:vKeys,datasets:[{label:'R$',data:vKeys.map(function(k){return vendasPorMes[k]}),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',fill:true,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-      if(window._glm)window._glm.destroy();
-      var leadsPorMes={};
-      L.forEach(function(l){if(l.data){var b=l.data.split('/');if(b.length==3){var key=b[1]+'/'+b[2];leadsPorMes[key]=(leadsPorMes[key]||0)+1}}});
-      var lKeys=Object.keys(leadsPorMes).sort();
-      var c1=document.getElementById('grafLeadsMesDash');
-      if(c1)window._glm=new Chart(c1,{type:'line',data:{labels:lKeys.length?lKeys:['Sem'],datasets:[{label:'Leads',data:lKeys.length?lKeys.map(function(k){return leadsPorMes[k]}):[0],borderColor:'#a855f7',backgroundColor:'rgba(168,85,247,.1)',fill:true,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-      if(window._gls)window._gls.destroy();
-      var leadsSts={};L.forEach(function(l){leadsSts[l.andamento]=(leadsSts[l.andamento]||0)+1});
-      var c2=document.getElementById('grafLeadsStatusDash');
-      if(c2)window._gls=new Chart(c2,{type:'bar',data:{labels:Object.keys(leadsSts),datasets:[{label:'Qtd',data:Object.values(leadsSts),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'].slice(0,Object.keys(leadsSts).length)}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-      if(window._gps)window._gps.destroy();
-      var projSts={};STATUS_LIST.forEach(function(s){projSts[s]=0});P.forEach(function(p){projSts[p.status||'A Fazer']=(projSts[p.status||'A Fazer']||0)+1});
-      var c3=document.getElementById('grafProjStatus');
-      if(c3)window._gps=new Chart(c3,{type:'doughnut',data:{labels:Object.keys(projSts),datasets:[{data:Object.values(projSts),backgroundColor:Object.keys(projSts).map(function(k){return STATUS_CORES[k]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}}});
-      if(window._gpe)window._gpe.destroy();
-      var projEmp={};P.forEach(function(p){projEmp[p.empresa||'Sem']=(projEmp[p.empresa||'Sem']||0)+1});
-      var c4=document.getElementById('grafProjEmp');
-      if(c4)window._gpe=new Chart(c4,{type:'bar',data:{labels:Object.keys(projEmp),datasets:[{label:'Qtd',data:Object.values(projEmp),backgroundColor:'rgba(20,184,166,.7)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-      if(window._gs)window._gs.destroy();
-      var g={};L.forEach(function(l){g[l.andamento]=(g[l.andamento]||0)+1});
-      var pal=['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#f97316'];
-      window._gs=new Chart(document.getElementById('grafStatus'),{type:'doughnut',data:{labels:Object.keys(g),datasets:[{data:Object.values(g),backgroundColor:Object.keys(g).map(function(k,i){return pal[i%pal.length]}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:12}}}}});
+      if(window._gev)window._gev.destroy();
+      var mesMap={};
+      V.forEach(function(v){var key=(v.mes||'?')+'/'+(v.ano||'');if(!mesMap[key])mesMap[key]={fat:0,rec:0,desp:0};mesMap[key].fat+=parseMon(v.valor);if(v.pago=='SIM')mesMap[key].rec+=parseMon(v.valor);mesMap[key].desp+=parseMon(v.gasto)});
+      var evKeys=Object.keys(mesMap).sort();
+      var cv1=document.getElementById('grafEvolucao');
+      if(cv1)window._gev=new Chart(cv1,{type:'line',data:{labels:evKeys.length?evKeys:['Sem'],datasets:[
+        {label:'Faturado',data:evKeys.map(function(k){return mesMap[k].fat}),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.08)',fill:true,tension:.35},
+        {label:'Recebido',data:evKeys.map(function(k){return mesMap[k].rec}),borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.08)',fill:true,tension:.35},
+        {label:'Despesas',data:evKeys.map(function(k){return mesMap[k].desp}),borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.08)',fill:true,tension:.35},
+        {label:'Resultado',data:evKeys.map(function(k){return mesMap[k].fat-mesMap[k].desp}),borderColor:'#a855f7',backgroundColor:'rgba(168,85,247,.08)',fill:false,tension:.35,borderDash:[5,5]}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+      function drawSpark(id,vals,cor){var cv=document.getElementById(id);if(!cv)return;new Chart(cv,{type:'line',data:{labels:vals.map(function(){return''}),datasets:[{data:vals,borderColor:cor,backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.4}]},options:{responsive:false,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}},elements:{line:{borderWidth:2}}}})}
+      var ult6=evKeys.slice(-6).map(function(k){return mesMap[k]?mesMap[k].fat:0});
+      if(ult6.length<2)ult6=[0,0];
+      drawSpark('sparkFat',ult6,'#3b82f6');
+      drawSpark('sparkCust',evKeys.slice(-6).map(function(k){return mesMap[k]?mesMap[k].desp:0}).concat([0]),'#f59e0b');
+      drawSpark('sparkMarg',evKeys.slice(-6).map(function(k){return mesMap[k]?(mesMap[k].fat-mesMap[k].desp):0}).concat([0]),'#a855f7');
+      drawSpark('sparkRes',evKeys.slice(-6).map(function(k){return mesMap[k]?(mesMap[k].fat-mesMap[k].desp):0}).concat([0]),'#22c55e');
+      if(window._gdon)window._gdon.destroy();
+      var stMap={};
+      stMap['Pagos/Recebidos']=V.filter(function(v){return v.pago=='SIM'}).length;
+      stMap['Pendentes']=V.filter(function(v){return v.pago!='SIM'}).length;
+      stMap['Em Andamento']=P.filter(function(p){return p.status=='Em Andamento'}).length;
+      stMap['Concluídos']=P.filter(function(p){return p.status=='Concluído'}).length;
+      var stLabels=Object.keys(stMap).filter(function(k){return stMap[k]>0});
+      if(!stLabels.length){stLabels=['Sem'];stMap['Sem']=1}
+      var stVals=stLabels.map(function(k){return stMap[k]});
+      var stCores=['#22c55e','#f59e0b','#3b82f6','#a855f7'];
+      var cv2=document.getElementById('grafDonutStatus');
+      if(cv2)window._gdon=new Chart(cv2,{type:'doughnut',data:{labels:stLabels,datasets:[{data:stVals,backgroundColor:stCores.slice(0,stLabels.length),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}});
+      var totalDonut=stVals.reduce(function(s,v){return s+v},0);
+      var dt=document.getElementById('donutTotal');
+      if(dt)dt.innerHTML='<div class="val">'+totalDonut+'</div><div class="lbl">Total</div>';
+      var dl=document.getElementById('donutLegend');
+      if(dl){dl.innerHTML='';stLabels.forEach(function(k,i){var pct=totalDonut>0?((stMap[k]/totalDonut)*100).toFixed(1):0;dl.innerHTML+='<div class="dl-item"><span class="dl-dot" style="background:'+stCores[i]+'"></span>'+k+'<span class="dl-pct">'+pct+'%</span></div>'})}
       var ae=document.getElementById('alertasEst');
       if(ae){var cc=E.filter(function(e){return e.qtd<=5}),bb=E.filter(function(e){return e.qtd>5&&e.qtd<=15});
       if(!cc.length&&!bb.length)ae.innerHTML='<p style="color:var(--sucesso)">✅ Todos ok</p>';
