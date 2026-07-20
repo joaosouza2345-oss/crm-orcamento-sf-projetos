@@ -342,6 +342,7 @@ async function pagDashboard(){
     '<div class="dash-toggle"><button class="ativo" onclick="dashRegime(this,\'mes\')">Mês</button><button onclick="dashRegime(this,\'ano\')">Ano</button></div>'+
     '</div>'+
     '<div class="filtro-bar">'+
+    '<div class="grupo"><label>Prazo</label><select id="fDashPrazo" onchange="filtrarDashAdmin()"><option value="">Todos</option><option value="7">7 dias</option><option value="15">15 dias</option><option value="21">21 dias</option><option value="28">28 dias</option><option value="30">30 dias</option><option value="60">60 dias</option><option value="120">120 dias</option><option value="365">1 ano</option></select></div>'+
     '<div class="grupo"><label>Empresa</label><select id="fDashEmp" onchange="filtrarDashAdmin()"><option value="">Todas</option></select></div>'+
     '<div class="grupo"><label>Início</label><input id="fDashIni" placeholder="dd/mm/aaaa" onchange="filtrarDashAdmin()"></div>'+
     '<div class="grupo"><label>Fim</label><input id="fDashFim" placeholder="dd/mm/aaaa" onchange="filtrarDashAdmin()"></div>'+
@@ -378,12 +379,20 @@ function limparFiltrosDash(){
   if(document.getElementById('fDashEmp'))document.getElementById('fDashEmp').value='';
   if(document.getElementById('fDashIni'))document.getElementById('fDashIni').value='';
   if(document.getElementById('fDashFim'))document.getElementById('fDashFim').value='';
+  if(document.getElementById('fDashPrazo'))document.getElementById('fDashPrazo').value='';
   filtrarDashAdmin();
 }
 function filtrarDashAdmin(){
   var emp=document.getElementById('fDashEmp')?document.getElementById('fDashEmp').value:'';
   var di=document.getElementById('fDashIni')?document.getElementById('fDashIni').value:'';
   var df=document.getElementById('fDashFim')?document.getElementById('fDashFim').value:'';
+  var prazo=document.getElementById('fDashPrazo')?document.getElementById('fDashPrazo').value:'';
+  if(prazo){
+    var hojeDt=new Date();
+    var prazoDt=new Date(hojeDt.getTime()-parseInt(prazo)*86400000);
+    di=String(prazoDt.getDate()).padStart(2,'0')+'/'+String(prazoDt.getMonth()+1).padStart(2,'0')+'/'+prazoDt.getFullYear();
+    df=String(hojeDt.getDate()).padStart(2,'0')+'/'+String(hojeDt.getMonth()+1).padStart(2,'0')+'/'+hojeDt.getFullYear();
+  }
   var L=_allLeads,V=_allVendas,P=_allProjetos,E=_allEstoque,O=_allOrcamentos||[];
   if(emp){V=V.filter(function(v){return v.empresa==emp});P=P.filter(function(p){return p.empresa==emp})}
   function dateInRange(dt){
