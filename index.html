@@ -468,25 +468,22 @@ function filtrarDashAdmin(){
     return true;
   }
   if(di||df){V=V.filter(function(v){return dateInRange(v.data||'')});P=P.filter(function(p){return dateInRange(p.data||'')})}
-  // CÁLCULOS COM VENDAS + PROJETOS
   var vends=L.filter(function(l){return l.andamento=='Venda Fechada'}).length;
   var recVendas=V.reduce(function(s,v){return s+parseMon(v.valor)},0);
   var recProjetos=P.filter(function(p){return p.pago=='SIM'}).reduce(function(s,p){return s+parseMon(p.valor)},0);
   var rec=recVendas+recProjetos;
   var gastVendas=V.reduce(function(s,v){return s+parseMon(v.gasto)},0);
   var trtTotal=P.reduce(function(s,p){return s+parseMon(p.trt)},0);
-  var gast= gastVendas+trtTotal;
+  var gast=gastVendas+trtTotal;
   var lucro=rec-gast;
   var tx=L.length>0?((vends/L.length)*100).toFixed(1):0;
   var margem=rec>0?((lucro/rec)*100).toFixed(0):0;
-  // KPI CARDS
   document.getElementById('kpiRow').innerHTML=
     '<div class="kpi-card blue"><div class="kpi-label">Faturado</div><div class="kpi-value">R$ '+fmtNum(rec)+'</div><div class="kpi-growth up">↑ '+(V.length+P.filter(function(p){return p.pago=='SIM'}).length)+' vendas/proj</div><canvas class="kpi-spark" id="sparkFat"></canvas></div>'+
     '<div class="kpi-card orange"><div class="kpi-label">Custos</div><div class="kpi-value">R$ '+fmtNum(gast)+'</div><div class="kpi-growth down">↓ Gastos + TRT</div><canvas class="kpi-spark" id="sparkCust"></canvas></div>'+
     '<div class="kpi-card purple"><div class="kpi-label">Margem</div><div class="kpi-value">'+margem+'%</div><div class="kpi-growth '+(margem>=50?'up':'down')+'">'+(margem>=50?'↑':'↓')+' Lucro/Faturado</div><canvas class="kpi-spark" id="sparkMarg"></canvas></div>'+
     '<div class="kpi-card green"><div class="kpi-label">Resultado</div><div class="kpi-value" style="color:'+(lucro>=0?'var(--sucesso)':'var(--perigo)')+'">R$ '+fmtNum(lucro)+'</div><div class="kpi-growth '+(lucro>=0?'up':'down')+'">'+(lucro>=0?'↑':'↓')+' Lucro líquido</div><canvas class="kpi-spark" id="sparkRes"></canvas></div>';
   window._L=L;window._V=V;window._E=E;window._P=P;window._O=O;
-  // INDICADORES (vendas + projetos)
   var pendentes=V.filter(function(v){return v.pago!='SIM'}).length;
   var recebido=V.filter(function(v){return v.pago=='SIM'}).length;
   var taxaRec=V.length>0?((recebido/V.length)*100).toFixed(1):0;
@@ -505,7 +502,6 @@ function filtrarDashAdmin(){
     '<div class="ind-item"><span class="ind-label">Projetos Concluídos</span><span><span class="ind-val">'+projConcluidos+'</span><span class="ind-tag ok">✓</span></span></div>'+
     '<div class="ind-item"><span class="ind-label">Valor Projetos Pagos</span><span><span class="ind-val">R$ '+fmtNum(valProjPagos)+'</span><span class="ind-tag ok">Receita</span></span></div>'+
     '<div class="ind-item"><span class="ind-label">Total de Leads</span><span><span class="ind-val">'+L.length+'</span><span class="ind-tag ok">'+vends+' fechados</span></span></div>';
-  // FATURAMENTO POR EMPRESA (vendas + projetos)
   var fatEmp={};
   V.forEach(function(v){fatEmp[v.empresa||'Sem']=(fatEmp[v.empresa||'Sem']||0)+parseMon(v.valor)});
   P.filter(function(p){return p.pago=='SIM'}).forEach(function(p){fatEmp[p.empresa||'Sem']=(fatEmp[p.empresa||'Sem']||0)+parseMon(p.valor)});
@@ -514,7 +510,6 @@ function filtrarDashAdmin(){
   var fatHtml='';fatKeys.forEach(function(k){var pct=(fatEmp[k]/fatMax*100).toFixed(0);var cor=['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899','#14b8a6'][fatKeys.indexOf(k)%6];fatHtml+='<div class="cat-bar-row"><div class="cat-info"><span class="cat-nome">'+k+'</span><span class="cat-val">R$ '+fmtNum(fatEmp[k])+'</span></div><div class="cat-bar"><div class="cat-bar-fill" style="width:'+pct+'%;background:'+cor+'"></div></div></div>'});
   if(!fatKeys.length)fatHtml='<p style="color:var(--text2);font-size:13px">Sem dados</p>';
   document.getElementById('fatPorEmpresa').innerHTML=fatHtml;
-  // GASTOS POR EMPRESA (vendas + TRT projetos)
   var gastEmp={};
   V.forEach(function(v){gastEmp[v.empresa||'Sem']=(gastEmp[v.empresa||'Sem']||0)+parseMon(v.gasto)});
   P.forEach(function(p){gastEmp[p.empresa||'Sem']=(gastEmp[p.empresa||'Sem']||0)+parseMon(p.trt)});
@@ -527,7 +522,6 @@ function filtrarDashAdmin(){
   setTimeout(function(){
     try{
       if(!window.Chart)return;
-      // EVOLUÇÃO FINANCEIRA (vendas + projetos)
       if(window._gev)window._gev.destroy();
       var mesMap={};
       V.forEach(function(v){var key=(v.mes||'?')+'/'+(v.ano||'');if(!mesMap[key])mesMap[key]={fat:0,rec:0,desp:0,proj:0};mesMap[key].fat+=parseMon(v.valor);if(v.pago=='SIM')mesMap[key].rec+=parseMon(v.valor);mesMap[key].desp+=parseMon(v.gasto)});
@@ -548,7 +542,6 @@ function filtrarDashAdmin(){
       drawSpark('sparkCust',evKeys.slice(-6).map(function(k){return mesMap[k]?mesMap[k].desp:0}).concat([0]),'#f59e0b');
       drawSpark('sparkMarg',evKeys.slice(-6).map(function(k){return mesMap[k]?(mesMap[k].fat-mesMap[k].desp):0}).concat([0]),'#a855f7');
       drawSpark('sparkRes',evKeys.slice(-6).map(function(k){return mesMap[k]?(mesMap[k].fat-mesMap[k].desp):0}).concat([0]),'#22c55e');
-      // DONUT STATUS (projetos por fase do kanban)
       if(window._gdon)window._gdon.destroy();
       var stMap={};
       KANBAN_FASES.forEach(function(f){var cnt=P.filter(function(p){return(p.status||'Recebido')==f.nome}).length;if(cnt>0)stMap[f.nome]=cnt});
@@ -729,7 +722,7 @@ function filtrarLeads(){
   var vnd=['João','Bruno','Vinicius','Sistema'];
   var h='';
   for(var i=0;i<d.length;i++){var l=d[i];var podeEditar=l.andamento!='Venda Fechada'||usuarioAtual.funcao=='Administrador';var linkVal=l.link_orcamento||'';var linkHtml='<div class="link-cell"><input class="edita-input" style="width:110px" value="'+linkVal+'" placeholder="https://..." onchange="altLead('+l.id+',\'link_orcamento\',this.value)"'+(podeEditar?'':' disabled')+'>';if(linkVal)linkHtml+='<a href="'+linkVal+'" target="_blank">🔗</a>';linkHtml+='</div>';
-    h+='<tr><td>'+l.nome+'</td><td>'+(l.cidade||'')+'</td><td>'+(l.origem||'')+'</td><td>'+l.valor+'</td><td>'+(l.contato||'')+'</td><td><input class="edita-input" style="width:85px" value="'+(l.data||'')+'" onchange="altLead('+l.id+',\'data\',this.value)"'+(podeEditar?'':' disabled')+'></td><td>'+linkHtml+'</td><td><select class="edita-select" style="width:145px" onchange="mudarAndamento('+l.id+',this.value)">'+sts.map(function(s){return'<option value="'+s+'"'+(l.andamento==s?' selected':'')+'>'+s+'</option>'}).join('')+'</select></td><td><select class="edita-select" style="width:90px" onchange="altLead('+l.id+',\'vendedor\',this.value)"'+(podeEditar?'':' disabled')+'>'+vnd.map(function(s){return'<option value="'+s+'"'+(l.vendedor==s?' selected':'')+'>'+s+'</option>'}).join('')+'</select></td><td>'+(l.andamento!='Venda Fechada'?'<button class="btn-icone" onclick="editarLead('+l.id+')">✏️</button>':'✅')+'</td></tr>'}
+    h+='<tr><td>'+l.nome+'</td><td>'+(l.cidade||'')+'</td><td>'+(l.origem||'')+'</td><td>'+l.valor+'</td><td>'+(l.contato||'')+'</td><td><input class="edita-input" style="width:85px" value="'+(l.data||'')+'" onchange="altLead('+l.id+',\'data\',this.value)"'+(podeEditar?'':' disabled')+'></td><td>'+linkHtml+'</td><td><select class="edita-select" style="width:145px" onchange="mudarAndamento('+l.id+',this.value)">'+sts.map(function(s){return'<option value="'+s+'"'+(l.andamento==s?' selected':'')+'>'+s+'</option>'}).join('')+'</select></td><td><select class="edita-select" style="width:90px" onchange="altLead('+l.id+',\'vendedor\',this.value)"'+(podeEditar?'':' disabled')+'>'+vnd.map(function(s){return'<option value="'+s+'"'+(l.vendedor==s?' selected':'')+'>'+s+'</option>'}).join('')+'</select></td><td style="white-space:nowrap">'+(l.andamento!='Venda Fechada'?'<button class="btn-icone" onclick="editarLead('+l.id+')">✏️</button>':'✅')+'<button class="btn-icone" onclick="delLead('+l.id+')" style="margin-left:4px">🗑️</button></td></tr>'}
   if(!d.length)h+='<tr><td colspan="10" style="text-align:center;padding:30px">Nenhum lead encontrado</td></tr>';
   document.getElementById('leadBody').innerHTML=h;
 }
@@ -738,6 +731,7 @@ async function editarLead(id){var d=await get('leads');var l=d.find(function(x){
 function fecharModalLead(){document.getElementById('modalLead').classList.remove('show');idxEditLead=null}
 async function salvarLeadModal(){var n=document.getElementById('fLeadNome').value.trim();if(!n){alert('Informe o nome');return}var dados={nome:n,contato:document.getElementById('fLeadTel').value.trim(),cidade:document.getElementById('fLeadCidade').value.trim(),origem:document.getElementById('fLeadOrigem').value,valor:document.getElementById('fLeadValor').value.trim()||'R$ 0,00',vendedor:document.getElementById('fLeadVendedor').value,link_orcamento:document.getElementById('fLeadLink').value.trim(),obs:document.getElementById('fLeadObs').value.trim()};if(idxEditLead){await upd('leads',idxEditLead,dados)}else{dados.data=hoje();dados.andamento='Contato Inicial';await ins('leads',dados)}fecharModalLead();pagLeads()}
 async function altLead(id,c,v){await upd('leads',id,{[c]:v})}
+async function delLead(id){if(!confirm('Excluir este lead?'))return;await del('leads',id);pagLeads()}
 async function mudarAndamento(id,v){var l=await get('leads');var lead=l.find(function(x){return x.id==id});if(!lead)return;if(v=='Venda Fechada'&&lead.andamento!='Venda Fechada'){idxVender=lead;document.getElementById('infoGasto').textContent='Cliente: '+lead.nome+' | '+hoje();document.getElementById('gastoValor').value=lead.valor||'';document.getElementById('gastoGasto').value='';document.getElementById('gastoEmpresa').value='SF';document.getElementById('gastoPotencia').value='';document.getElementById('modalGasto').classList.add('show');return}if(lead.andamento=='Venda Fechada'&&v!='Venda Fechada'){var vendas=await get('vendas');var vDel=vendas.filter(function(x){return x.cliente==lead.nome});for(var i=0;i<vDel.length;i++){var gastos=await get('gastos');var gDel=gastos.filter(function(x){return x.cliente==lead.nome});for(var j=0;j<gDel.length;j++){await del('gastos',gDel[j].id)}await del('vendas',vDel[i].id)}limparCache()}await upd('leads',id,{andamento:v});pagLeads()}
 function fecharModalGasto(){document.getElementById('modalGasto').classList.remove('show');idxVender=null}
 async function confirmarVenda(){if(!idxVender)return;var vl=document.getElementById('gastoValor').value.trim(),g=document.getElementById('gastoGasto').value.trim(),emp=document.getElementById('gastoEmpresa').value,pot=document.getElementById('gastoPotencia').value.trim();if(!vl||!g){alert('Preencha valor e gasto');return}var mm=meses()[new Date().getMonth()];var aa=String(new Date().getFullYear());await ins('vendas',{cliente:idxVender.nome,empresa:emp,potencia:pot,mes:mm,ano:aa,valor:vl,pago:'SIM',gasto:'R$ '+fmtNum(parseMon(g))});await ins('gastos',{venda:idxVender.nome,cliente:idxVender.nome,empresa:emp,mes:mm,valor_venda:vl,gasto:'R$ '+fmtNum(parseMon(g)),lucro:'R$ '+fmtNum(parseMon(vl)-parseMon(g))});await upd('leads',idxVender.id,{andamento:'Venda Fechada'});limparCache();fecharModalGasto();pagLeads()}
