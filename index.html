@@ -73,6 +73,7 @@ tr:hover td{background:var(--bg3)}
 .grupo{display:flex;flex-direction:column;gap:3px}
 .grupo label{font-size:12px;color:var(--text2);font-weight:500}
 .grupo input,.grupo select{padding:8px 10px;border:1px solid var(--input-border);border-radius:5px;background:var(--input-bg);color:var(--text);font-size:14px;outline:none}
+input.moeda{text-align:right;font-weight:600;font-size:16px}
 .orc-tema{--bg:#0f1724;--bg2:#1a2332;--bg3:#1e293b;--text:#e2e8f0;--text2:#94a3b8;--border:#2d3a4e;--input-bg:#1a2332;--input-border:#334155}
 .orc-tema .cartao{background:#1a2332;border-color:#334155}
 .orc-tema input,.orc-tema select{background:#1a2332;border-color:#334155;color:#e2e8f0}
@@ -215,13 +216,18 @@ tr:hover td{background:var(--bg3)}
 <div class="form-grid">
 <div class="grupo"><label>Nome *</label><input id="fLeadNome"></div><div class="grupo"><label>Telefone</label><input id="fLeadTel"></div>
 <div class="grupo"><label>Cidade</label><input id="fLeadCidade"></div><div class="grupo"><label>Origem</label><select id="fLeadOrigem"><option>Indicação</option><option>Instagram</option><option>Facebook</option><option>Site</option><option>WhatsApp</option><option>Outro</option></select></div>
-<div class="grupo"><label>Valor</label><input id="fLeadValor"></div><div class="grupo"><label>Vendedor</label><select id="fLeadVendedor"><option>João</option><option>Bruno</option><option>Vinicius</option><option>Sistema</option></select></div>
+<div class="grupo"><label>Valor</label><input id="fLeadValor" class="moeda" value="R$ 0,00" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div>
+<div class="grupo"><label>Vendedor</label><select id="fLeadVendedor"><option>João</option><option>Bruno</option><option>Vinicius</option><option>Sistema</option></select></div>
 <div class="grupo" style="grid-column:1/3"><label>Link do Orçamento (pasta)</label><input id="fLeadLink" placeholder="https://drive.google.com/..." style="width:100%"></div>
 <div class="grupo" style="grid-column:1/3"><label>Obs</label><input id="fLeadObs"></div></div>
 <button class="btn btn-primary" onclick="salvarLeadModal()">Salvar</button></div></div>
 <div class="modal-overlay" id="modalGasto"><div class="modal">
 <button class="flut-direita" onclick="fecharModalGasto()">✕</button><h2>Nova Venda</h2><p id="infoGasto"></p>
-<div class="form-grid"><div class="grupo"><label>Valor</label><input id="gastoValor"></div><div class="grupo"><label>Gasto</label><input id="gastoGasto"></div><div class="grupo"><label>Empresa</label><select id="gastoEmpresa"><option>SF</option><option>SPAZZIO</option><option>BRANCO</option><option>ÉTHOS</option><option>SOLAR FORCE</option><option>TAQUARI</option></select></div><div class="grupo"><label>Potência</label><input id="gastoPotencia"></div></div>
+<div class="form-grid">
+<div class="grupo"><label>Valor</label><input id="gastoValor" class="moeda" value="R$ 0,00" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div>
+<div class="grupo"><label>Gasto</label><input id="gastoGasto" class="moeda" value="R$ 0,00" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div>
+<div class="grupo"><label>Empresa</label><select id="gastoEmpresa"><option>SF</option><option>SPAZZIO</option><option>BRANCO</option><option>ÉTHOS</option><option>SOLAR FORCE</option><option>TAQUARI</option></select></div>
+<div class="grupo"><label>Potência</label><input id="gastoPotencia"></div></div>
 <button class="btn btn-success" onclick="confirmarVenda()">Confirmar</button></div></div>
 <div class="modal-overlay" id="modalEstoque"><div class="modal">
 <button class="flut-direita" onclick="fecharModalEstoque()">✕</button><h2 id="tituloEstoque">Novo Item</h2>
@@ -229,7 +235,8 @@ tr:hover td{background:var(--bg3)}
 <div class="grupo"><label>Item</label><input id="estqItem"></div><div class="grupo"><label>Tipo</label><input id="estqTipo"></div>
 <div class="grupo"><label>Marca</label><input id="estqMarca"></div><div class="grupo"><label>Un</label><select id="estqUn"><option>un</option><option>metro</option><option>kg</option><option>par</option></select></div>
 <div class="grupo"><label>Qtd</label><input type="number" id="estqQtd"></div><div class="grupo"><label>Fornecedor</label><input id="estqFornec"></div>
-<div class="grupo"><label>Vlr Pago</label><input type="number" id="estqPago"></div><div class="grupo"><label>Vlr Venda</label><input type="number" id="estqVenda"></div></div>
+<div class="grupo"><label>Vlr Pago</label><input type="number" id="estqPago" class="moeda" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div>
+<div class="grupo"><label>Vlr Venda</label><input type="number" id="estqVenda" class="moeda" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div></div>
 <button class="btn btn-primary" onclick="salvarEstoque()">Salvar</button></div></div>
 <div class="modal-overlay" id="modalPDF"><div class="modal">
 <button class="flut-direita" onclick="fecharModalPDF()">✕</button><h2>Exportar Projetos em PDF</h2>
@@ -253,8 +260,8 @@ tr:hover td{background:var(--bg3)}
 </div>
 <div id="mpEmpresaInfo" class="emp-info-box" style="display:none"></div>
 <div class="form-grid-3" id="mpValoresRow">
-<div class="grupo"><label>Valor (R$)</label><input id="mpValor"></div>
-<div class="grupo"><label>TRT (R$)</label><input id="mpTrt"></div>
+<div class="grupo"><label>Valor (R$)</label><input id="mpValor" class="moeda" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div>
+<div class="grupo"><label>TRT (R$)</label><input id="mpTrt" class="moeda" onfocus="valorFocus(this)" onblur="valorBlur(this)" oninput="valorInput(this)"></div>
 <div class="grupo"><label>Pago</label><select id="mpPago"><option>NÃO</option><option>SIM</option></select></div>
 </div>
 <div class="form-grid-3">
@@ -351,6 +358,23 @@ function parseMon(s){if(!s)return 0;return parseFloat(String(s).replace(/[R$\s.]
 function hoje(){var d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
 function meses(){return['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']}
 function mesesCurto(){return['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']}
+
+// FORMATAÇÃO DE MOEDA R$
+function valorInput(el){
+  if(!el)return;
+  var v=el.value.replace(/[R$\s.]/g,'').replace(',','.');
+  var n=parseFloat(v)||0;
+  el.value='R$ '+fmtNum(n);
+}
+function valorFocus(el){
+  if(!el)return;
+  var v=el.value.replace(/[R$\s.]/g,'').replace(',','.');
+  el.value=v;
+}
+function valorBlur(el){
+  valorInput(el);
+}
+
 function altTema(){document.body.classList.toggle('dark');document.getElementById('btnTema').textContent=document.body.classList.contains('dark')?'☀️':'🌙';localStorage.setItem('tema',document.body.classList.contains('dark')?'dark':'light')}
 function limparCache(){cache={}}
 function toggleSidebar(){var s=document.getElementById('sidebar');var o=document.getElementById('sidebarOverlay');s.classList.toggle('open');o.classList.toggle('show')}
@@ -732,7 +756,7 @@ function fecharModalLead(){document.getElementById('modalLead').classList.remove
 async function salvarLeadModal(){var n=document.getElementById('fLeadNome').value.trim();if(!n){alert('Informe o nome');return}var dados={nome:n,contato:document.getElementById('fLeadTel').value.trim(),cidade:document.getElementById('fLeadCidade').value.trim(),origem:document.getElementById('fLeadOrigem').value,valor:document.getElementById('fLeadValor').value.trim()||'R$ 0,00',vendedor:document.getElementById('fLeadVendedor').value,link_orcamento:document.getElementById('fLeadLink').value.trim(),obs:document.getElementById('fLeadObs').value.trim()};if(idxEditLead){await upd('leads',idxEditLead,dados)}else{dados.data=hoje();dados.andamento='Contato Inicial';await ins('leads',dados)}fecharModalLead();pagLeads()}
 async function altLead(id,c,v){await upd('leads',id,{[c]:v})}
 async function delLead(id){if(!confirm('Excluir este lead?'))return;await del('leads',id);pagLeads()}
-async function mudarAndamento(id,v){var l=await get('leads');var lead=l.find(function(x){return x.id==id});if(!lead)return;if(v=='Venda Fechada'&&lead.andamento!='Venda Fechada'){idxVender=lead;document.getElementById('infoGasto').textContent='Cliente: '+lead.nome+' | '+hoje();document.getElementById('gastoValor').value=lead.valor||'';document.getElementById('gastoGasto').value='';document.getElementById('gastoEmpresa').value='SF';document.getElementById('gastoPotencia').value='';document.getElementById('modalGasto').classList.add('show');return}if(lead.andamento=='Venda Fechada'&&v!='Venda Fechada'){var vendas=await get('vendas');var vDel=vendas.filter(function(x){return x.cliente==lead.nome});for(var i=0;i<vDel.length;i++){var gastos=await get('gastos');var gDel=gastos.filter(function(x){return x.cliente==lead.nome});for(var j=0;j<gDel.length;j++){await del('gastos',gDel[j].id)}await del('vendas',vDel[i].id)}limparCache()}await upd('leads',id,{andamento:v});pagLeads()}
+async function mudarAndamento(id,v){var l=await get('leads');var lead=l.find(function(x){return x.id==id});if(!lead)return;if(v=='Venda Fechada'&&lead.andamento!='Venda Fechada'){idxVender=lead;document.getElementById('infoGasto').textContent='Cliente: '+lead.nome+' | '+hoje();document.getElementById('gastoValor').value=lead.valor||'R$ 0,00';document.getElementById('gastoGasto').value='R$ 0,00';document.getElementById('gastoEmpresa').value='SF';document.getElementById('gastoPotencia').value='';document.getElementById('modalGasto').classList.add('show');return}if(lead.andamento=='Venda Fechada'&&v!='Venda Fechada'){var vendas=await get('vendas');var vDel=vendas.filter(function(x){return x.cliente==lead.nome});for(var i=0;i<vDel.length;i++){var gastos=await get('gastos');var gDel=gastos.filter(function(x){return x.cliente==lead.nome});for(var j=0;j<gDel.length;j++){await del('gastos',gDel[j].id)}await del('vendas',vDel[i].id)}limparCache()}await upd('leads',id,{andamento:v});pagLeads()}
 function fecharModalGasto(){document.getElementById('modalGasto').classList.remove('show');idxVender=null}
 async function confirmarVenda(){if(!idxVender)return;var vl=document.getElementById('gastoValor').value.trim(),g=document.getElementById('gastoGasto').value.trim(),emp=document.getElementById('gastoEmpresa').value,pot=document.getElementById('gastoPotencia').value.trim();if(!vl||!g){alert('Preencha valor e gasto');return}var mm=meses()[new Date().getMonth()];var aa=String(new Date().getFullYear());await ins('vendas',{cliente:idxVender.nome,empresa:emp,potencia:pot,mes:mm,ano:aa,valor:vl,pago:'SIM',gasto:'R$ '+fmtNum(parseMon(g))});await ins('gastos',{venda:idxVender.nome,cliente:idxVender.nome,empresa:emp,mes:mm,valor_venda:vl,gasto:'R$ '+fmtNum(parseMon(g)),lucro:'R$ '+fmtNum(parseMon(vl)-parseMon(g))});await upd('leads',idxVender.id,{andamento:'Venda Fechada'});limparCache();fecharModalGasto();pagLeads()}
 // VENDAS
@@ -936,8 +960,7 @@ function calcPotenciaValor(){
   var fb=document.getElementById('mpPotenciaFeedback');
   if(!potStr){if(fb)fb.textContent='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='';return}
   var r=calcularValorPorPotencia(potStr);
-  if(document.getElementById('mpValor'))document.getElementById('mpValor').value=r.valor;
-  if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value=r.trt;
+  document.getElementById('mpValor').value=r.valor;document.getElementById('mpTrt').value=r.trt;
   if(fb){if(isEmp){fb.textContent='✅ Valor calculado';fb.style.color='var(--sucesso)'}else{fb.textContent='→ Valor: '+r.valor+' | TRT: '+r.trt;fb.style.color='var(--sucesso)'}}
 }
 async function abrirModalProj(p){
@@ -964,7 +987,12 @@ async function abrirModalProj(p){
     if(p&&p.empresa_id){sel.value=p.empresa_id;onEmpresaChange()}
   }
   document.getElementById('mpValoresRow').style.display=isEmp?'none':'';
-  if(!isEmp){document.getElementById('mpValor').value=p?p.valor:'';document.getElementById('mpTrt').value=p?(p.trt||'R$ 70,00'):'R$ 70,00';document.getElementById('mpPago').value=p?(p.pago||'NÃO'):'NÃO';document.getElementById('mpPago').disabled=false}
+  if(!isEmp){
+    document.getElementById('mpValor').value=(p?p.valor:'')||'';
+    document.getElementById('mpTrt').value=(p?p.trt:'R$ 70,00')||'R$ 70,00';
+    document.getElementById('mpPago').value=p?(p.pago||'NÃO'):'NÃO';
+    document.getElementById('mpPago').disabled=false;
+  }
   if(p&&p.potencia){calcPotenciaValor()}
   projDocs=[];projFotos=[];
   if(p&&p.documentos){try{projDocs=JSON.parse(p.documentos)}catch(e){projDocs=[]}}
@@ -1006,7 +1034,7 @@ async function salvarModalProj(){
   else{msg.style.color='var(--perigo)';msg.textContent='❌ Erro ao salvar. Abra o console (F12).'}
 }
 async function excluirModalProj(){if(!idxEditProjModal)return;if(!confirm('Excluir este projeto?'))return;await del('projetos',idxEditProjModal);fecharModalProj();pagProjetos()}
-function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='Recebido';document.getElementById('mpPotencia').value='';document.getElementById('mpPotenciaFeedback').textContent='';if(document.getElementById('mpValor'))document.getElementById('mpValor').value='';if(document.getElementById('mpTrt'))document.getElementById('mpTrt').value='R$ 70,00';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
+function limparModalProj(){document.getElementById('mpCliente').value='';document.getElementById('mpData').value=hoje();document.getElementById('mpStatus').value='Recebido';document.getElementById('mpPotencia').value='';document.getElementById('mpPotenciaFeedback').textContent='';document.getElementById('mpValor').value='';document.getElementById('mpTrt').value='R$ 70,00';projDocs=[];projFotos=[];renderProjDocs();renderProjFotos();document.getElementById('mpMsg').textContent='';idxEditProjModal=null;document.getElementById('tituloModalProj').textContent='📝 Novo Projeto';document.getElementById('mpBtnDel').style.display='none';document.getElementById('mpDocInput').value='';document.getElementById('mpFotoInput').value=''}
 // ORÇAMENTOS
 async function pagOrcamentos(){ORC_HIST=await get('orcamentos');document.getElementById('conteudo').innerHTML='<div class="titulo-pag">📋 Orçamentos</div><div class="orc-tema" style="background:#0f1724;border-radius:12px;padding:20px"><div class="orc-nav"><span class="ativo" onclick="navOrc(\'criar\')">💰 Criar</span><span onclick="navOrc(\'hist\')">📜 Histórico</span></div><div id="orcBody">'+htmlCriarOrc()+'</div></div>';setTimeout(function(){document.getElementById('orcId').value=gerarOrcId();carregarSelOrc()},100)}
 function gerarOrcId(){var m=String(new Date().getMonth()+1).padStart(2,'0'),a=String(new Date().getFullYear()).slice(-2),pre=m+'/'+a+'/';var seq=[];(ORC_HIST.length?ORC_HIST:[]).forEach(function(o){if(o.id&&o.id.indexOf(pre)===0){var n=parseInt(o.id.split('/')[2]);if(!isNaN(n))seq.push(n)}});return pre+String((seq.length?Math.max.apply(null,seq):0)+1).padStart(3,'0')}
@@ -1069,7 +1097,7 @@ function filtrarEstoque(){
   if(!d.length)bh='<tr><td colspan="10" style="text-align:center;padding:30px">Nenhum item encontrado</td></tr>';
   document.getElementById('estqBody').innerHTML=bh;
 }
-function abrirModalEstq(item){idEditEstq=item?item.id:null;document.getElementById('estqItem').value=item?item.item:'';document.getElementById('estqTipo').value=item?item.tipo:'';document.getElementById('estqMarca').value=item?item.marca:'';document.getElementById('estqQtd').value=item?item.qtd:0;document.getElementById('estqUn').value=item?item.un:'un';document.getElementById('estqPago').value=item?item.valor_pago:'';document.getElementById('estqVenda').value=item?item.valor_venda:'';document.getElementById('estqFornec').value=item?item.fornec:'';document.getElementById('modalEstoque').classList.add('show')}
+function abrirModalEstq(item){idEditEstq=item?item.id:null;document.getElementById('estqItem').value=item?item.item:'';document.getElementById('estqTipo').value=item?item.tipo:'';document.getElementById('estqMarca').value=item?item.marca:'';document.getElementById('estqQtd').value=item?item.qtd:0;document.getElementById('estqUn').value=item?item.un:'un';document.getElementById('estqPago').value=item?item.valor_pago:0;document.getElementById('estqVenda').value=item?item.valor_venda:0;document.getElementById('estqFornec').value=item?item.fornec:'';document.getElementById('modalEstoque').classList.add('show')}
 function fecharModalEstoque(){document.getElementById('modalEstoque').classList.remove('show')}
 async function salvarEstoque(){var item=document.getElementById('estqItem').value.trim(),tipo=document.getElementById('estqTipo').value.trim(),marca=document.getElementById('estqMarca').value.trim(),qtd=parseInt(document.getElementById('estqQtd').value)||0,un=document.getElementById('estqUn').value,vp=parseFloat(document.getElementById('estqPago').value)||0,vv=parseFloat(document.getElementById('estqVenda').value)||0,fornec=document.getElementById('estqFornec').value.trim();if(!item){alert('Nome obrigatório');return}if(idEditEstq){await upd('estoque',idEditEstq,{item,tipo,marca,qtd,un,valor_pago:vp,valor_venda:vv,fornec})}else{await ins('estoque',{item,tipo,marca,qtd,un,valor_pago:vp,valor_venda:vv,fornec})}fecharModalEstoque();pagEstoque()}
 async function editEstq(id){var d=await get('estoque');var e=d.find(function(x){return x.id==id});if(e)abrirModalEstq(e)}
